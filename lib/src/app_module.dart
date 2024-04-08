@@ -1,9 +1,14 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_clean_architecture/src/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:flutter_clean_architecture/src/features/auth/data/services/auth_service.dart';
+import 'package:flutter_clean_architecture/src/features/auth/domain/repositories/auth_repository.dart';
+import 'package:flutter_clean_architecture/src/features/auth/domain/usecases/auth_login.dart';
+import 'package:flutter_clean_architecture/src/features/auth/domain/usecases/auth_logout.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/usecases/get_news_usecase.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_clean_architecture/src/features/auth/data/services/firebase_auth_service.dart';
-import 'package:flutter_clean_architecture/src/features/auth/interactor/stores/auth_store.dart';
+import 'package:flutter_clean_architecture/src/features/auth/data/services/firebase/firebase_auth_service.dart';
+import 'package:flutter_clean_architecture/src/features/auth/domain/stores/auth_store.dart';
 import 'package:flutter_clean_architecture/src/features/home/data/datasource/news_datasource.dart';
 import 'package:flutter_clean_architecture/src/features/home/data/datasource/newsApi/news_api_datasource.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/repositories/home_repository.dart';
@@ -21,9 +26,12 @@ class AppModule extends Module {
     i.addInstance(Dio());
     i.addInstance(FirebaseAuth.instance);
 
-    i.add(FirebaseAuthService.new);
+    i.addSingleton(AuthLogoutUseCase.new);
+    i.addSingleton(AuthLoginUseCase.new);
+    i.addSingleton<AuthService>(FirebaseAuthService.new);
+    i.addSingleton<AuthRepository>(FirebaseAuthRepository.new);
     i.addLazySingleton(AuthStore.new);
-
+    
     i.addSingleton(GetNewsUseCase.new);
     i.addSingleton<NewsDatasource>(NewsApiDatasource.new);
     i.addSingleton<HomeRepository>(HomeRepositoryImpl.new);

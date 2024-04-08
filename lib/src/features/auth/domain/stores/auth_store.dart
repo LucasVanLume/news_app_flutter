@@ -1,6 +1,7 @@
-import 'package:flutter_clean_architecture/src/features/auth/interactor/entities/user_entity.dart';
-import 'package:flutter_clean_architecture/src/features/auth/interactor/repositories/auth_repository.dart';
-import 'package:flutter_clean_architecture/src/features/auth/interactor/states/auth_state.dart';
+import 'package:flutter_clean_architecture/src/features/auth/domain/entities/user_entity.dart';
+import 'package:flutter_clean_architecture/src/features/auth/domain/states/auth_state.dart';
+import 'package:flutter_clean_architecture/src/features/auth/domain/usecases/auth_login.dart';
+import 'package:flutter_clean_architecture/src/features/auth/domain/usecases/auth_logout.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/errors/home_error.dart';
 import 'package:mobx/mobx.dart';
 
@@ -10,6 +11,12 @@ part 'auth_store.g.dart';
 class AuthStore = _AuthStoreBase with _$AuthStore;
 
 abstract class _AuthStoreBase with Store {
+  //final FirebaseAuthRepository firebaseAuthRepository;
+  final AuthLoginUseCase loginUseCase;
+  final AuthLogoutUseCase logoutUseCase;
+
+  _AuthStoreBase(this.loginUseCase, this.logoutUseCase);
+
   @observable
   AuthState _authState = const LogoutedAuthState();
 
@@ -24,7 +31,7 @@ abstract class _AuthStoreBase with Store {
     isLoading = true;
     _authState = const LoadingAuthState();
     try{
-      _userEntity = await FirebaseAuthRepository().login(email: email, password: password);
+      _userEntity = await loginUseCase.callAuthLoginUseCase(email: email, password: password);
       _authState = LoggedAuthState(_userEntity!);
     } on Failure {
       _authState = const LogoutedAuthState();
@@ -38,7 +45,7 @@ abstract class _AuthStoreBase with Store {
     isLoading = true;
     _authState = const LoadingAuthState();
     try {
-      await FirebaseAuthRepository().logout();
+      await logoutUseCase.callAuthLogoutUseCase();
       _authState = const LogoutedAuthState();
     } on Failure {
       _authState = LoggedAuthState(_userEntity!);

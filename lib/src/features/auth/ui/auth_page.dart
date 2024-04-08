@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/src/app_theme.dart';
-import 'package:flutter_clean_architecture/src/features/auth/interactor/stores/auth_store.dart';
+import 'package:flutter_clean_architecture/src/features/auth/domain/stores/auth_store.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class AuthPage extends StatefulWidget {
@@ -158,7 +158,7 @@ class _AuthPageState extends State<AuthPage> {
     return ElevatedButton(
       onPressed: () async {
         if (email.isNotEmpty && password.isNotEmpty) {
-          final authStore = AuthStore();
+          final authStore = Modular.get<AuthStore>();
           authStore.login(email: email, password: password);
           Modular.to.navigate('/home');
         } else {
@@ -177,7 +177,7 @@ class _AuthPageState extends State<AuthPage> {
         style: TextStyle(
           color: Colors.white,
         ),
-        ),
+      ),
     );
 
   }

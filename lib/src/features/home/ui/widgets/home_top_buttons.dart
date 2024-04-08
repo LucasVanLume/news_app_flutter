@@ -18,7 +18,7 @@ class HomeTopButtons extends StatelessWidget {
                 ActionButtom(icon: Icons.notifications_none, onTap: () => {},),
               ],
             ),
-            SearchButtom(), // Container(color: Colors.amber, child: Row(children:[Text('AQUI')]),),
+            const SearchButtom(), // Container(color: Colors.amber, child: Row(children:[Text('AQUI')]),),
           ],
         ),
       ),

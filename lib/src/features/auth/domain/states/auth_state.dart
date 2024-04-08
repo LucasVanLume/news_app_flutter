@@ -1,4 +1,4 @@
-import 'package:flutter_clean_architecture/src/features/auth/interactor/entities/user_entity.dart';
+import 'package:flutter_clean_architecture/src/features/auth/domain/entities/user_entity.dart';
 
 sealed class AuthState {
   const AuthState();
