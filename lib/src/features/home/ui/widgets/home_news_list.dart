@@ -146,26 +146,3 @@ class _HomeNewsListState extends State<HomeNewsList> {
     );
   }
 }
-
-
-
-// class HomeNewsListItem extends StatefulWidget {
-//   final List<News> newsItem;
-//   const HomeNewsListItem({super.key, required this.newsItem});
-
-//   @override
-//   State<HomeNewsListItem> createState() => _HomeNewsListItemState();
-// }
-
-// class _HomeNewsListItemState extends State<HomeNewsListItem> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container();
-//   }
-// }
-
-
-
-
-
-

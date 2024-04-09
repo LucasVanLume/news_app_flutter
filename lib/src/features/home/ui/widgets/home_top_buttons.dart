@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_clean_architecture/configs/app_settings.dart';
 import 'package:flutter_clean_architecture/src/app_theme.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+
 
 class HomeTopButtons extends StatelessWidget {
   const HomeTopButtons({super.key});
@@ -58,28 +61,53 @@ class SearchButtom extends StatefulWidget {
 }
 
 class _SearchButtomState extends State<SearchButtom> {
+  final appSettings = Modular.get<AppSettings>();
+  late String hindTextSearch;
+  late Map<String, String> loc;
   var allItems = List.generate(50, (index) => 'item $index');
 
   var item = [];
-
   var searchHistory = [];
+
+  readHintText() {
+    loc = context.watch<AppSettings>().locale;
+    hindTextSearch = loc['locale'] == 'pt_BR' ? 'Search' : 'Pesquisa';
+  }
+
+  changeLanguageButton() {
+    final locale = loc['locale'] == 'pt_BR' ? 'en_US' : 'pt_BR';
+    final name = loc['locale'] == 'pt_BR' ? 'Search' : 'Pesquisa';
+
+    return IconButton(
+      icon: const Icon(Icons.language),
+      onPressed: () {
+        context.read<AppSettings>().setLocale(locale, name);
+      },
+    );
+  }
 
   final TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    readHintText();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Discover',
-            style: TextStyle(
-              color: Color.fromARGB(255, 85, 85, 85),
-              fontWeight: FontWeight.w800,
-              fontSize: 25,
-            ),
+          Row(
+            children: [
+              const Text(
+                'Discover',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 85, 85, 85),
+                  fontWeight: FontWeight.w800,
+                  fontSize: 25,
+                ),
+              ),
+            changeLanguageButton(),
+            ],
           ),
           const SizedBox(height: 12),
           Center(
@@ -104,7 +132,7 @@ class _SearchButtomState extends State<SearchButtom> {
                   color: AppTheme.iconNavBar,
                 ),
               ],
-              hintText: 'Pesquisa',
+              hintText: hindTextSearch, // 'Pesquisa',
             ),
           ),
         ],
