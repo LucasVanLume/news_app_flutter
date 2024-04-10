@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_clean_architecture/configs/app_settings.dart';
+import 'package:flutter_clean_architecture/core/configs/language/app_settings_language.dart';
 import 'package:flutter_clean_architecture/src/app_theme.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 
-class HomeTopButtons extends StatelessWidget {
+class HomeTopButtons extends StatefulWidget {
   const HomeTopButtons({super.key});
 
   @override
+  State<HomeTopButtons> createState() => _HomeTopButtonsState();
+}
+
+class _HomeTopButtonsState extends State<HomeTopButtons> {
+  final appSettings = Modular.get<AppSettingsLanguage>();
+
+  @override
   Widget build(BuildContext context) {
+    final translations = appSettings.readTexts(context);
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       sliver: SliverToBoxAdapter(
@@ -18,16 +26,18 @@ class HomeTopButtons extends StatelessWidget {
               children: [
                 ActionButtom(icon: Icons.menu, onTap: () => {},),
                 const Spacer(),
-                ActionButtom(icon: Icons.notifications_none, onTap: () => {},),
+                ActionButtom(
+                  icon: Icons.language,
+                  onTap: appSettings.changeLanguageButton,
+                ),
               ],
             ),
-            const SearchButtom(), // Container(color: Colors.amber, child: Row(children:[Text('AQUI')]),),
+            SearchButtom(hintText: translations['hintTextSearch'] ?? 'Pesquisa'), // Container(color: Colors.amber, child: Row(children:[Text('AQUI')]),),
           ],
         ),
       ),
     );
   }
-
 }
 
 class ActionButtom extends StatelessWidget {
@@ -54,60 +64,36 @@ class ActionButtom extends StatelessWidget {
 }
 
 class SearchButtom extends StatefulWidget {
-  const SearchButtom({super.key});
+  final String hintText;
+  const SearchButtom({super.key, required this.hintText});
 
   @override
   State<SearchButtom> createState() => _SearchButtomState();
 }
 
 class _SearchButtomState extends State<SearchButtom> {
-  final appSettings = Modular.get<AppSettings>();
-  late String hindTextSearch;
-  late Map<String, String> loc;
   var allItems = List.generate(50, (index) => 'item $index');
 
   var item = [];
   var searchHistory = [];
 
-  readHintText() {
-    loc = context.watch<AppSettings>().locale;
-    hindTextSearch = loc['locale'] == 'pt_BR' ? 'Search' : 'Pesquisa';
-  }
-
-  changeLanguageButton() {
-    final locale = loc['locale'] == 'pt_BR' ? 'en_US' : 'pt_BR';
-    final name = loc['locale'] == 'pt_BR' ? 'Search' : 'Pesquisa';
-
-    return IconButton(
-      icon: const Icon(Icons.language),
-      onPressed: () {
-        context.read<AppSettings>().setLocale(locale, name);
-      },
-    );
-  }
-
   final TextEditingController searchController = TextEditingController();
-
+  
   @override
   Widget build(BuildContext context) {
-    readHintText();
+    // readHintText();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              const Text(
-                'Discover',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 85, 85, 85),
-                  fontWeight: FontWeight.w800,
-                  fontSize: 25,
-                ),
-              ),
-            changeLanguageButton(),
-            ],
+          const Text(
+            'Discover',
+            style: TextStyle(
+              color: Color.fromARGB(255, 85, 85, 85),
+              fontWeight: FontWeight.w800,
+              fontSize: 25,
+            ),
           ),
           const SizedBox(height: 12),
           Center(
@@ -132,7 +118,7 @@ class _SearchButtomState extends State<SearchButtom> {
                   color: AppTheme.iconNavBar,
                 ),
               ],
-              hintText: hindTextSearch, // 'Pesquisa',
+              hintText: widget.hintText, // 'Pesquisa',
             ),
           ),
         ],

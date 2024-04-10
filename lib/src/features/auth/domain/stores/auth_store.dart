@@ -1,7 +1,7 @@
 import 'package:flutter_clean_architecture/src/features/auth/domain/entities/user_entity.dart';
 import 'package:flutter_clean_architecture/src/features/auth/domain/states/auth_state.dart';
-import 'package:flutter_clean_architecture/src/features/auth/domain/usecases/auth_login.dart';
-import 'package:flutter_clean_architecture/src/features/auth/domain/usecases/auth_logout.dart';
+import 'package:flutter_clean_architecture/src/features/auth/domain/usecases/auth_login_usecase.dart';
+import 'package:flutter_clean_architecture/src/features/auth/domain/usecases/auth_logout_usecase.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/errors/home_error.dart';
 import 'package:mobx/mobx.dart';
 

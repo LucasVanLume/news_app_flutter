@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_clean_architecture/configs/app_settings.dart';
+import 'package:flutter_clean_architecture/core/configs/language/app_settings_language.dart';
 import 'package:flutter_clean_architecture/src/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:flutter_clean_architecture/src/features/auth/data/services/auth_service.dart';
 import 'package:flutter_clean_architecture/src/features/auth/domain/repositories/auth_repository.dart';
-import 'package:flutter_clean_architecture/src/features/auth/domain/usecases/auth_login.dart';
-import 'package:flutter_clean_architecture/src/features/auth/domain/usecases/auth_logout.dart';
+import 'package:flutter_clean_architecture/src/features/auth/domain/usecases/auth_login_usecase.dart';
+import 'package:flutter_clean_architecture/src/features/auth/domain/usecases/auth_logout_usecase.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/usecases/get_news_usecase.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -38,7 +38,7 @@ class AppModule extends Module {
     i.addSingleton<HomeRepository>(HomeRepositoryImpl.new);
     i.addLazySingleton(HomeStore.new);
 
-    i.addSingleton(AppSettings.new);
+    i.addSingleton(AppSettingsLanguage.new);
   }
 
   @override

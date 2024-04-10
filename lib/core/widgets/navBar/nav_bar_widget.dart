@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_clean_architecture/core/configs/language/app_settings_language.dart';
 import 'package:flutter_clean_architecture/core/widgets/navBar/components/bottom_nav_bar.dart';
-//import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:provider/provider.dart';
 
 class NavBarWidget extends StatelessWidget {
-  const NavBarWidget({super.key});
+  NavBarWidget({super.key});
+
+  final appSettings = Modular.get<AppSettingsLanguage>();
 
   @override
   Widget build(BuildContext context) {
+    final translations = appSettings.readTexts(context);
     return ChangeNotifierProvider<BottomNavBarController>(
       create: (context) => BottomNavBarController(),
       child: Consumer<BottomNavBarController>(
@@ -23,7 +27,7 @@ class NavBarWidget extends StatelessWidget {
                   children: [
                     for (int i = 0; i < 3; i++)
                       BottomNavBar(
-                        text: ['Discover', 'Salvos', 'Perfil'][i],
+                        text: ['Discover', translations['saveNavBar'] ?? 'Salvos', translations['profileNavBar'] ?? 'Perfil'][i],
                         isActive: i == controller.activeIndex,
                         icon: [Icons.stream, Icons.bookmarks, Icons.person][i],
                         index: i,
