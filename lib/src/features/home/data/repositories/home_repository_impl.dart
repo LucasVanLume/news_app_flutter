@@ -10,9 +10,9 @@ class HomeRepositoryImpl implements HomeRepository {
   HomeRepositoryImpl(this.datasource);
 
   @override
-  Future<List<News>> getNews() async {
+  Future<List<News>> getNews(page, pageSize) async {
     try {
-      final list = await datasource.newsFetch();
+      final list = await datasource.newsFetch(page, pageSize);
       return list;
     } on Failure catch (e) {
       throw Exception(e);

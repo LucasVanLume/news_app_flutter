@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+//import 'package:flutter_clean_architecture/src/app_theme.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_entity.dart';
+import 'package:flutter_clean_architecture/src/features/home/domain/stores/home_store.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class HomeNewsList extends StatefulWidget {
   final List<News> listNews;
@@ -10,22 +13,39 @@ class HomeNewsList extends StatefulWidget {
 }
 
 class _HomeNewsListState extends State<HomeNewsList> {
+  final homeStore = Modular.get<HomeStore>();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    int sum = 0;
+    //int sum = 0;
     return SliverToBoxAdapter(
       child: ListView.builder(  
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: 5,
+        itemCount: widget.listNews.length,
         shrinkWrap: true,
         itemBuilder: (BuildContext context, int index) {
-          var item = widget.listNews[index + sum];
-          while (index < widget.listNews.length - 1 && (item.author == null || item.source['name'] == null || item.urlToImage == null)) {
-            item = widget.listNews[index+sum+1];
-            sum++;
-          }
-                                
+          // var loading = homeStore.isLoading;
+          // print(loading);
+          // if (index == widget.listNews.length) {
+          //   if (loading) {
+          //     return const Padding(
+          //       padding: EdgeInsets.only(bottom: 15),
+          //       child: CircleAvatar(
+          //         backgroundColor: AppTheme.white,
+          //         child: SizedBox(
+          //           height: 30,
+          //           width: 30,
+          //           child: CircularProgressIndicator(
+          //             backgroundColor: AppTheme.appColor,
+          //             color: AppTheme.white,
+          //           )
+          //         ),
+          //       ),
+          //     );
+          //   } return null;
+          // }
+          var item = widget.listNews[index];                      
           return Container(
             margin: const EdgeInsets.symmetric(
               horizontal: 24,
@@ -137,7 +157,7 @@ class _HomeNewsListState extends State<HomeNewsList> {
                       )
                     ],
                   )
-                )
+                )     
               ],
             ),
           );

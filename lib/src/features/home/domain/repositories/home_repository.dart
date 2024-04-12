@@ -2,5 +2,5 @@ import 'package:flutter_clean_architecture/src/features/home/domain/entities/new
 
 
 abstract class HomeRepository {
-  Future<List<News>> getNews();
+  Future<List<News>> getNews(page, pageSize);
 }

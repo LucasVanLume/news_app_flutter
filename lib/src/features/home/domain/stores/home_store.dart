@@ -26,13 +26,39 @@ abstract class _HomeStoreBase with Store {
   @observable
   bool isLoading = false;
 
+  @observable
+  bool isRefreshNews = false; 
+
   @action
-  Future<void> fetchNews() async {
+  Future<void> fetchNews(isRefreshNews) async {
+    isLoading = true;
+    try {
+      final news = await _useCase.callGetNewsUseCase(isRefreshNews);
+
+      // if (isRefreshNews && news[0].publishedAt == newsList![0].publishedAt) {
+      //   state = SuccessState(newsList!);
+      // } else {
+      newsList = news;
+      state = SuccessState(newsList!);
+      //}
+
+      // newsList = news;
+      // state = SuccessState(newsList!);
+    } on Failure catch (e) {
+      state = ErrorState(e);
+    } finally {
+      isLoading = false;
+      isRefreshNews = false;
+    }
+  }
+
+  @action
+  Future<void> init() async {
     isLoading = true;
     state = const LoadingState();
 
     try {
-      final news = await _useCase.callGetNewsUseCase();
+      final news = await _useCase.callGetNewsUseCase(false);
       newsList = news;
       state = SuccessState(newsList!);
     } on Failure catch (e) {
@@ -50,5 +76,15 @@ abstract class _HomeStoreBase with Store {
   @action
   void setState(HomeState newState) {
     state = newState;
+  }
+
+  @action
+  Future<void> setStateLoading (bool boolean) async {
+    isLoading = boolean;
+  }
+
+  @action
+  Future<void> setISRefreshNews (bool boolean) async {
+    isRefreshNews = boolean;
   }
 }

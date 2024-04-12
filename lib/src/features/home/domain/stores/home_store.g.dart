@@ -56,12 +56,54 @@ mixin _$HomeStore on _HomeStoreBase, Store {
     });
   }
 
+  late final _$isRefreshNewsAtom =
+      Atom(name: '_HomeStoreBase.isRefreshNews', context: context);
+
+  @override
+  bool get isRefreshNews {
+    _$isRefreshNewsAtom.reportRead();
+    return super.isRefreshNews;
+  }
+
+  @override
+  set isRefreshNews(bool value) {
+    _$isRefreshNewsAtom.reportWrite(value, super.isRefreshNews, () {
+      super.isRefreshNews = value;
+    });
+  }
+
   late final _$fetchNewsAsyncAction =
       AsyncAction('_HomeStoreBase.fetchNews', context: context);
 
   @override
-  Future<void> fetchNews() {
-    return _$fetchNewsAsyncAction.run(() => super.fetchNews());
+  Future<void> fetchNews(dynamic isRefreshNews) {
+    return _$fetchNewsAsyncAction.run(() => super.fetchNews(isRefreshNews));
+  }
+
+  late final _$initAsyncAction =
+      AsyncAction('_HomeStoreBase.init', context: context);
+
+  @override
+  Future<void> init() {
+    return _$initAsyncAction.run(() => super.init());
+  }
+
+  late final _$setStateLoadingAsyncAction =
+      AsyncAction('_HomeStoreBase.setStateLoading', context: context);
+
+  @override
+  Future<void> setStateLoading(bool boolean) {
+    return _$setStateLoadingAsyncAction
+        .run(() => super.setStateLoading(boolean));
+  }
+
+  late final _$setISRefreshNewsAsyncAction =
+      AsyncAction('_HomeStoreBase.setISRefreshNews', context: context);
+
+  @override
+  Future<void> setISRefreshNews(bool boolean) {
+    return _$setISRefreshNewsAsyncAction
+        .run(() => super.setISRefreshNews(boolean));
   }
 
   late final _$_HomeStoreBaseActionController =
@@ -94,7 +136,8 @@ mixin _$HomeStore on _HomeStoreBase, Store {
     return '''
 state: ${state},
 newsList: ${newsList},
-isLoading: ${isLoading}
+isLoading: ${isLoading},
+isRefreshNews: ${isRefreshNews}
     ''';
   }
 }

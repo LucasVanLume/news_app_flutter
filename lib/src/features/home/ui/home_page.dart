@@ -17,14 +17,38 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final homeStore = Modular.get<HomeStore>();
-  late final Future<void> _fetchNewsFuture;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _fetchNewsFuture = homeStore.fetchNews();
+    _scrollController.addListener(infineScrolling);
+  }
 
-    _fetchNewsFuture.then((listNews) {});
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+  }
+
+  Future<void> infineScrolling() async {
+    if (_scrollController.offset == _scrollController.position.maxScrollExtent) {
+        // homeStore.setStateLoading(true);
+        // return Future.delayed(const Duration(seconds: 2))
+        // .whenComplete(() => homeStore.fetchNews());
+        homeStore.setISRefreshNews(false);
+        homeStore.fetchNews(homeStore.isRefreshNews);
+    }
+  }
+
+  void loadNews() {
+    homeStore.init();
+  }
+
+  Future<void> refreshNews() async {
+    homeStore.setISRefreshNews(true);
+    return Future.delayed(const Duration(seconds: 2))
+      .whenComplete(() async => await homeStore.fetchNews(homeStore.isRefreshNews));
   }
 
   @override
@@ -37,22 +61,31 @@ class _HomePageState extends State<HomePage> {
               var state = homeStore.state;
 
               if (state is StartState) {
+                loadNews();
                 return const Center(
-                  child: Text('START'),
+                  child: CircularProgressIndicator(),
                 );
+
               } else if (state is LoadingState) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
+
               } else if (state is SuccessState) {
                 return SafeArea(
-                  child: CustomScrollView(
-                    slivers: [
-                      const HomeTopButtons(),
-                      HomeNewsList(listNews: state.list),
-                    ],
+                  child: RefreshIndicator(
+                    onRefresh: refreshNews,
+                    color: Theme.of(context).primaryColor,
+                    child: CustomScrollView(
+                      controller: _scrollController,
+                      slivers: [
+                        const HomeTopButtons(),
+                        HomeNewsList(listNews: state.list),
+                      ],
+                    ),
                   )
                 );
+
               } else {
                 return Container();
               }
