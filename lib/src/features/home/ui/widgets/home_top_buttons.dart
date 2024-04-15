@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/core/configs/language/app_settings_language.dart';
 import 'package:flutter_clean_architecture/src/app_theme.dart';
+import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_entity.dart';
+import 'package:flutter_clean_architecture/src/features/home/domain/states/home_state.dart';
+import 'package:flutter_clean_architecture/src/features/home/domain/stores/home_store.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 
@@ -72,16 +75,46 @@ class SearchButtom extends StatefulWidget {
 }
 
 class _SearchButtomState extends State<SearchButtom> {
+  final homeStore = Modular.get<HomeStore>();
   var allItems = List.generate(50, (index) => 'item $index');
 
-  var item = [];
+  List<News>? items = [];
   var searchHistory = [];
-
   final TextEditingController searchController = TextEditingController();
-  
+  final FocusNode searchFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    searchController.addListener(queryListener);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    searchController.dispose();
+  }
+
+  void queryListener() {
+    search(searchController.text);
+  }
+
+  void search(String query) {
+    if (query.isEmpty) {
+      searchController.clear;
+      items = homeStore.getNewsList();
+      homeStore.setState(SuccessState(items!));
+      homeStore.setIsSearching(false);
+    } else {
+      items = homeStore.getNewsList();
+      items = items!.where((e) => e.title!.toLowerCase().contains(query.toLowerCase())).toList();
+      homeStore.setState(SuccessState(items!));
+      homeStore.setIsSearching(true);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // readHintText();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
       child: Column(
@@ -99,6 +132,7 @@ class _SearchButtomState extends State<SearchButtom> {
           Center(
             child: SearchBar(
               controller: searchController,
+              focusNode: searchFocusNode,
               backgroundColor: MaterialStateProperty.all(AppTheme.inkWellButtom),
               shadowColor: MaterialStateProperty.all(Colors.transparent),
               surfaceTintColor: MaterialStateProperty.all(Colors.transparent),
@@ -113,7 +147,7 @@ class _SearchButtomState extends State<SearchButtom> {
               ),
               trailing: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {searchFocusNode.unfocus();},
                   icon: const Icon(Icons.search),  
                   color: AppTheme.iconNavBar,
                 ),

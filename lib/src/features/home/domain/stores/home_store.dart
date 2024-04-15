@@ -1,6 +1,5 @@
 import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_entity.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/errors/home_error.dart';
-//import 'package:flutter_clean_architecture/src/features/home/domain/repositories/home_repository.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/states/home_state.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/usecases/get_news_usecase.dart';
 import 'package:mobx/mobx.dart';
@@ -29,21 +28,18 @@ abstract class _HomeStoreBase with Store {
   @observable
   bool isRefreshNews = false; 
 
+  @observable
+  bool isSearching = false;
+
   @action
   Future<void> fetchNews(isRefreshNews) async {
     isLoading = true;
     try {
       final news = await _useCase.callGetNewsUseCase(isRefreshNews);
 
-      // if (isRefreshNews && news[0].publishedAt == newsList![0].publishedAt) {
-      //   state = SuccessState(newsList!);
-      // } else {
       newsList = news;
       state = SuccessState(newsList!);
-      //}
 
-      // newsList = news;
-      // state = SuccessState(newsList!);
     } on Failure catch (e) {
       state = ErrorState(e);
     } finally {
@@ -79,12 +75,22 @@ abstract class _HomeStoreBase with Store {
   }
 
   @action
-  Future<void> setStateLoading (bool boolean) async {
+  Future<void> setIsLoading (bool boolean) async {
     isLoading = boolean;
   }
 
   @action
   Future<void> setISRefreshNews (bool boolean) async {
     isRefreshNews = boolean;
+  }
+
+  @action
+  Future<void> setIsSearching (bool boolean) async {
+    isSearching = boolean;
+  }
+
+  @action
+  List<News>? getNewsList() {
+    return newsList;
   }
 }

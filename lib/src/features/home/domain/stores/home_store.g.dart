@@ -88,13 +88,12 @@ mixin _$HomeStore on _HomeStoreBase, Store {
     return _$initAsyncAction.run(() => super.init());
   }
 
-  late final _$setStateLoadingAsyncAction =
-      AsyncAction('_HomeStoreBase.setStateLoading', context: context);
+  late final _$setIsLoadingAsyncAction =
+      AsyncAction('_HomeStoreBase.setIsLoading', context: context);
 
   @override
-  Future<void> setStateLoading(bool boolean) {
-    return _$setStateLoadingAsyncAction
-        .run(() => super.setStateLoading(boolean));
+  Future<void> setIsLoading(bool boolean) {
+    return _$setIsLoadingAsyncAction.run(() => super.setIsLoading(boolean));
   }
 
   late final _$setISRefreshNewsAsyncAction =
@@ -126,6 +125,17 @@ mixin _$HomeStore on _HomeStoreBase, Store {
         name: '_HomeStoreBase.setState');
     try {
       return super.setState(newState);
+    } finally {
+      _$_HomeStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  List<News>? getNewsList() {
+    final _$actionInfo = _$_HomeStoreBaseActionController.startAction(
+        name: '_HomeStoreBase.getNewsList');
+    try {
+      return super.getNewsList();
     } finally {
       _$_HomeStoreBaseActionController.endAction(_$actionInfo);
     }

@@ -31,24 +31,28 @@ class _HomePageState extends State<HomePage> {
     _scrollController.dispose();
   }
 
-  Future<void> infineScrolling() async {
-    if (_scrollController.offset == _scrollController.position.maxScrollExtent) {
-        // homeStore.setStateLoading(true);
-        // return Future.delayed(const Duration(seconds: 2))
-        // .whenComplete(() => homeStore.fetchNews());
-        homeStore.setISRefreshNews(false);
-        homeStore.fetchNews(homeStore.isRefreshNews);
-    }
-  }
-
   void loadNews() {
     homeStore.init();
   }
 
+  Future<void> infineScrolling() async {
+    if (!homeStore.isSearching && _scrollController.offset == _scrollController.position.maxScrollExtent) {
+        homeStore.setISRefreshNews(false);
+        loadMoreNews();
+    }
+  }
+
+  void loadMoreNews() async {
+    homeStore.setIsLoading(true);
+    //await Future.delayed(const Duration(seconds: 2));
+    homeStore.fetchNews(homeStore.isRefreshNews);
+  }
+
   Future<void> refreshNews() async {
     homeStore.setISRefreshNews(true);
-    return Future.delayed(const Duration(seconds: 2))
-      .whenComplete(() async => await homeStore.fetchNews(homeStore.isRefreshNews));
+    homeStore.setIsSearching(false);
+    await Future.delayed(const Duration(seconds: 2))
+      .whenComplete(loadMoreNews);
   }
 
   @override
