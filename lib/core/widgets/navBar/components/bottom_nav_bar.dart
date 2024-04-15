@@ -6,7 +6,7 @@ class BottomNavBar extends StatelessWidget {
   final IconData icon;
   final int index;
   final bool isActive;
-  final VoidCallback onTap;
+  final Function() onTap;
   const BottomNavBar(
       {super.key,
       required this.text,
