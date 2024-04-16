@@ -160,7 +160,8 @@ class _AuthPageState extends State<AuthPage> {
         if (email.isNotEmpty && password.isNotEmpty) {
           final authStore = Modular.get<AuthStore>();
           authStore.login(email: email, password: password);
-          Modular.to.navigate('/home');
+          // Modular.to.navigate('/home');
+          Modular.to.navigate('/main');
         } else {
           // mensagem de erro
         }

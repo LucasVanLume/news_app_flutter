@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_clean_architecture/core/widgets/navBar/nav_bar_widget.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/states/home_state.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/stores/home_store.dart';
 import 'package:flutter_clean_architecture/src/features/home/ui/widgets/home_news_list.dart';
@@ -97,7 +96,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      bottomNavigationBar: NavBarWidget(),
+      //bottomNavigationBar: NavBarWidget(),
     );
   }
 } 
