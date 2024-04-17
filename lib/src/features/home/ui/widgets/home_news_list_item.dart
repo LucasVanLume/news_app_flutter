@@ -17,7 +17,7 @@ class HomeNewsListItem extends StatelessWidget {
       required this.url});
 
   Future<void> launchUri(uri) async {
-    final Uri url = Uri.parse(uri);
+    Uri url = Uri.parse(uri);
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
     }
