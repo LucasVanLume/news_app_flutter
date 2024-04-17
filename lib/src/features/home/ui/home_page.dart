@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/states/home_state.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/stores/home_store.dart';
-import 'package:flutter_clean_architecture/src/features/home/ui/widgets/home_news_list.dart';
 import 'package:flutter_clean_architecture/src/features/home/ui/widgets/home_top_buttons.dart';
+import 'package:flutter_clean_architecture/src/features/home/ui/widgets/home_news_list.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -83,7 +83,8 @@ class _HomePageState extends State<HomePage> {
                       controller: _scrollController,
                       slivers: [
                         const HomeTopButtons(),
-                        HomeNewsList(listNews: state.list),
+                        //HomeNewsList(listNews: state.list),
+                        HomeNewsList(listNews: state.list)
                       ],
                     ),
                   )

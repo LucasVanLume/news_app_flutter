@@ -6,6 +6,7 @@ class AppTheme {
   static const Color white = Color.fromARGB(255, 255, 255, 255);
   static const Color iconNavBar = Color(0xFF949A9A);
   static const Color inkWellButtom = Color(0xFFF6F5F8);
+  static const Color title = Color.fromARGB(255, 85, 85, 85);
 
 
   static const MaterialColor appColorSwatch = MaterialColor(0xFF0B86E7, _appColorMap);
