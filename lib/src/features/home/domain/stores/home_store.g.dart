@@ -72,6 +72,22 @@ mixin _$HomeStore on _HomeStoreBase, Store {
     });
   }
 
+  late final _$isSearchingAtom =
+      Atom(name: '_HomeStoreBase.isSearching', context: context);
+
+  @override
+  bool get isSearching {
+    _$isSearchingAtom.reportRead();
+    return super.isSearching;
+  }
+
+  @override
+  set isSearching(bool value) {
+    _$isSearchingAtom.reportWrite(value, super.isSearching, () {
+      super.isSearching = value;
+    });
+  }
+
   late final _$fetchNewsAsyncAction =
       AsyncAction('_HomeStoreBase.fetchNews', context: context);
 
@@ -103,6 +119,14 @@ mixin _$HomeStore on _HomeStoreBase, Store {
   Future<void> setISRefreshNews(bool boolean) {
     return _$setISRefreshNewsAsyncAction
         .run(() => super.setISRefreshNews(boolean));
+  }
+
+  late final _$setIsSearchingAsyncAction =
+      AsyncAction('_HomeStoreBase.setIsSearching', context: context);
+
+  @override
+  Future<void> setIsSearching(bool boolean) {
+    return _$setIsSearchingAsyncAction.run(() => super.setIsSearching(boolean));
   }
 
   late final _$_HomeStoreBaseActionController =
@@ -147,7 +171,8 @@ mixin _$HomeStore on _HomeStoreBase, Store {
 state: ${state},
 newsList: ${newsList},
 isLoading: ${isLoading},
-isRefreshNews: ${isRefreshNews}
+isRefreshNews: ${isRefreshNews},
+isSearching: ${isSearching}
     ''';
   }
 }

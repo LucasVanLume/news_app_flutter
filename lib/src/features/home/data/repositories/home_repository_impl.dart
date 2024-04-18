@@ -1,4 +1,4 @@
-import 'package:flutter_clean_architecture/src/features/home/data/datasource/news_datasource.dart';
+import 'package:flutter_clean_architecture/src/features/home/data/datasource/remote/news_datasource.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_entity.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/errors/home_error.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/repositories/home_repository.dart';
