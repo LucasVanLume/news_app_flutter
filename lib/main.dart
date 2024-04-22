@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/firebase_options.dart';
 import 'package:flutter_clean_architecture/src/app_module.dart';
 import 'package:flutter_clean_architecture/src/app_widget.dart';
-import 'package:flutter_clean_architecture/src/features/home/data/datasource/local/db.dart';
+import 'package:flutter_clean_architecture/core/database/db.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 Future<void> main() async {
