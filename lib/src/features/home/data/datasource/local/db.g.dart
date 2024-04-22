@@ -123,7 +123,7 @@ class _$NewsDao extends NewsDao {
   final InsertionAdapter<NewsSave> _newsSaveInsertionAdapter;
 
   @override
-  Future<void> insertNews(NewsSave article) async {
-    await _newsSaveInsertionAdapter.insert(article, OnConflictStrategy.replace);
+  Future<void> insertNews(NewsSave news) async {
+    await _newsSaveInsertionAdapter.insert(news, OnConflictStrategy.replace);
   }
 }

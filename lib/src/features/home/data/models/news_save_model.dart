@@ -5,8 +5,9 @@ part 'news_save_model.g.dart';
 
 @JsonSerializable()
 class NewsSaveModel extends NewsSave {
-  const NewsSaveModel({
-    required super.id,
+  NewsSaveModel({
+    super.id,
+    //required super.idxNews,
     //required super.source,
     required super.author,
     required super.title,

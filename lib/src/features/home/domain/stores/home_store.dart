@@ -1,7 +1,9 @@
 import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_entity.dart';
+import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_save_entity.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/errors/home_error.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/states/home_state.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/usecases/get_news_usecase.dart';
+import 'package:flutter_clean_architecture/src/features/home/domain/usecases/save_news_usecase.dart';
 import 'package:mobx/mobx.dart';
 
 
@@ -13,14 +15,18 @@ class HomeStore = _HomeStoreBase with _$HomeStore;
 
 abstract class _HomeStoreBase with Store {
   final GetNewsUseCase _useCase;
+  final SaveNewsUseCase _saveNewsUseCase;
 
-  _HomeStoreBase(this._useCase);
+  _HomeStoreBase(this._useCase, this._saveNewsUseCase);
 
   @observable
   HomeState state = const StartState();
 
   @observable
   List<News>? newsList;
+
+  @observable
+  NewsSave? newsSave;
 
   @observable
   bool isLoading = false;
@@ -30,6 +36,20 @@ abstract class _HomeStoreBase with Store {
 
   @observable
   bool isSearching = false;
+
+  @action
+  Future<void> saveNews(NewsSave newsSaving) async {
+    isLoading = true;
+
+    try {
+      newsSave = newsSaving;
+      await _saveNewsUseCase.callSaveNewsUseCase(newsSave!);
+    } on Failure catch (e) {
+      state = ErrorState(e);
+    } finally {
+      isLoading = false;
+    }
+  }
 
   @action
   Future<void> fetchNews(isRefreshNews) async {

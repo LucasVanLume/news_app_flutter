@@ -40,6 +40,22 @@ mixin _$HomeStore on _HomeStoreBase, Store {
     });
   }
 
+  late final _$newsSaveAtom =
+      Atom(name: '_HomeStoreBase.newsSave', context: context);
+
+  @override
+  NewsSave? get newsSave {
+    _$newsSaveAtom.reportRead();
+    return super.newsSave;
+  }
+
+  @override
+  set newsSave(NewsSave? value) {
+    _$newsSaveAtom.reportWrite(value, super.newsSave, () {
+      super.newsSave = value;
+    });
+  }
+
   late final _$isLoadingAtom =
       Atom(name: '_HomeStoreBase.isLoading', context: context);
 
@@ -86,6 +102,14 @@ mixin _$HomeStore on _HomeStoreBase, Store {
     _$isSearchingAtom.reportWrite(value, super.isSearching, () {
       super.isSearching = value;
     });
+  }
+
+  late final _$saveNewsAsyncAction =
+      AsyncAction('_HomeStoreBase.saveNews', context: context);
+
+  @override
+  Future<void> saveNews(NewsSave newsSaving) {
+    return _$saveNewsAsyncAction.run(() => super.saveNews(newsSaving));
   }
 
   late final _$fetchNewsAsyncAction =
@@ -170,6 +194,7 @@ mixin _$HomeStore on _HomeStoreBase, Store {
     return '''
 state: ${state},
 newsList: ${newsList},
+newsSave: ${newsSave},
 isLoading: ${isLoading},
 isRefreshNews: ${isRefreshNews},
 isSearching: ${isSearching}

@@ -6,7 +6,11 @@ import 'package:flutter_clean_architecture/src/features/auth/data/services/auth_
 import 'package:flutter_clean_architecture/src/features/auth/domain/repositories/auth_repository.dart';
 import 'package:flutter_clean_architecture/src/features/auth/domain/usecases/auth_login_usecase.dart';
 import 'package:flutter_clean_architecture/src/features/auth/domain/usecases/auth_logout_usecase.dart';
+import 'package:flutter_clean_architecture/src/features/home/data/datasource/local/db.dart';
+import 'package:flutter_clean_architecture/src/features/home/data/repositories/home_db_repository_impl.dart';
+import 'package:flutter_clean_architecture/src/features/home/domain/repositories/home_db_repository.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/usecases/get_news_usecase.dart';
+import 'package:flutter_clean_architecture/src/features/home/domain/usecases/save_news_usecase.dart';
 import 'package:flutter_clean_architecture/src/features/saves/ui/saves_page.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,8 +18,8 @@ import 'package:flutter_clean_architecture/src/features/auth/data/services/fireb
 import 'package:flutter_clean_architecture/src/features/auth/domain/stores/auth_store.dart';
 import 'package:flutter_clean_architecture/src/features/home/data/datasource/remote/news_datasource.dart';
 import 'package:flutter_clean_architecture/src/features/home/data/datasource/remote/newsApi/news_api_datasource.dart';
-import 'package:flutter_clean_architecture/src/features/home/domain/repositories/home_repository.dart';
-import 'package:flutter_clean_architecture/src/features/home/data/repositories/home_repository_impl.dart';
+import 'package:flutter_clean_architecture/src/features/home/domain/repositories/home_api_repository.dart';
+import 'package:flutter_clean_architecture/src/features/home/data/repositories/home_api_repository_impl.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/stores/home_store.dart';
 import '../core/pages/splash_page.dart';
 import 'package:flutter_clean_architecture/src/features/auth/ui/auth_page.dart';
@@ -23,22 +27,31 @@ import 'package:flutter_clean_architecture/src/features/home/ui/home_page.dart';
 
 
 class AppModule extends Module {
+  late AppDatabase database;
+
+  AppModule({required this.database});
 
   @override
   void binds(i) {
+
     i.addInstance(Dio());
     i.addInstance(FirebaseAuth.instance);
+    i.addInstance(database);
 
     i.addSingleton(AuthLogoutUseCase.new);
     i.addSingleton(AuthLoginUseCase.new);
     i.addSingleton<AuthService>(FirebaseAuthService.new);
     i.addSingleton<AuthRepository>(FirebaseAuthRepository.new);
     i.addLazySingleton(AuthStore.new);
-    
-    i.addSingleton(GetNewsUseCase.new);
-    i.addSingleton<NewsDatasource>(NewsApiDatasource.new);
-    i.addSingleton<HomeRepository>(HomeRepositoryImpl.new);
+
+    i.addSingleton(AppDatabaseLocal.new);
+    i.addSingleton(SaveNewsUseCase.new);
+    i.addSingleton<HomeDbRepository>(HomeDbRepositoryImpl.new);
     i.addLazySingleton(HomeStore.new);
+    i.addSingleton(GetNewsUseCase.new); 
+    i.addSingleton<NewsDatasource>(NewsApiDatasource.new);
+    i.addSingleton<HomeApiRepository>(HomeApiRepositoryImpl.new);
+    
 
     i.addSingleton(AppSettingsLanguage.new);
   }

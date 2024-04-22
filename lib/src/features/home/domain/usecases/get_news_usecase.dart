@@ -1,10 +1,10 @@
 import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_entity.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/errors/home_error.dart';
-import 'package:flutter_clean_architecture/src/features/home/domain/repositories/home_repository.dart';
+import 'package:flutter_clean_architecture/src/features/home/domain/repositories/home_api_repository.dart';
 
 
 class GetNewsUseCase {
-  final HomeRepository homeRepository;
+  final HomeApiRepository homeRepository;
   int _page = 1;
   final int _pageSize = 6;
   List<News> _news = [];

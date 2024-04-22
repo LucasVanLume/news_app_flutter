@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/src/app_theme.dart';
+import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_save_entity.dart';
+import 'package:flutter_clean_architecture/src/features/home/domain/stores/home_store.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeNewsListItem extends StatelessWidget {
+  //final int idxNews;
   final String sourceName;
   final String author; 
   final String title;
@@ -10,6 +14,7 @@ class HomeNewsListItem extends StatelessWidget {
   final String url;
   const HomeNewsListItem(
       {super.key,
+      //required this.idxNews,
       required this.sourceName,
       required this.author,
       required this.title,
@@ -25,6 +30,7 @@ class HomeNewsListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final homeStore = Modular.get<HomeStore>();
 
     Size size = MediaQuery.of(context).size;
     return GestureDetector(
@@ -100,7 +106,11 @@ class HomeNewsListItem extends StatelessWidget {
                   )
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    final news = NewsSave(author: author, title: title, url: url, urlToImage: urlToImage);
+
+                    homeStore.saveNews(news);
+                  },
                   icon: const Icon(
                     Icons.bookmark_border,
                     color: AppTheme.iconNavBar,

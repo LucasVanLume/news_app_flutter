@@ -4,6 +4,7 @@ import 'package:floor/floor.dart';
 class NewsSave {
   @PrimaryKey(autoGenerate: true)
   final int? id;
+  //final int? idxNews;
   //final Map source;
   final String? author;
   final String? title;
@@ -11,8 +12,9 @@ class NewsSave {
   final String? urlToImage;
 
 
-  const NewsSave({
-    required this.id,
+  NewsSave({
+    this.id,
+    //required this.idxNews,
     //required this.source,
     required this.author,
     required this.title,
