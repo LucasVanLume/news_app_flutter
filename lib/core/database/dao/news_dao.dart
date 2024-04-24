@@ -6,4 +6,10 @@ import 'package:flutter_clean_architecture/src/features/home/domain/entities/new
 abstract class NewsDao {
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> insertNews(NewsSave news);
+
+  @delete
+  Future<void> deleteNews(NewsSave news);
+
+  @Query('SELECT * FROM NewsTable')
+  Future<List<NewsSave>> getAllNews();
 }

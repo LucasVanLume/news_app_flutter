@@ -3,7 +3,7 @@ import 'package:flutter_clean_architecture/src/features/home/domain/entities/new
 
 class NewsSaveModel extends NewsSave {
   NewsSaveModel({
-    super.id,
+    //super.id,
     //required super.idxNews,
     //required super.source,
     required super.author,

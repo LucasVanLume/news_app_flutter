@@ -11,6 +11,11 @@ import 'package:flutter_clean_architecture/src/features/home/data/repositories/h
 import 'package:flutter_clean_architecture/src/features/home/domain/repositories/home_db_repository.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/usecases/get_news_usecase.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/usecases/save_news_usecase.dart';
+import 'package:flutter_clean_architecture/src/features/saves/data/repositories/saves_db_repository_impl.dart';
+import 'package:flutter_clean_architecture/src/features/saves/domain/repositories/saves_db_repository.dart';
+import 'package:flutter_clean_architecture/src/features/saves/domain/stores/saves_store.dart';
+import 'package:flutter_clean_architecture/src/features/saves/domain/usecases/delete_news_save_usecase.dart';
+import 'package:flutter_clean_architecture/src/features/saves/domain/usecases/get_news_save_usecase.dart';
 import 'package:flutter_clean_architecture/src/features/saves/ui/saves_page.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -51,8 +56,12 @@ class AppModule extends Module {
     i.addSingleton(GetNewsUseCase.new); 
     i.addSingleton<NewsDatasource>(NewsApiDatasource.new);
     i.addSingleton<HomeApiRepository>(HomeApiRepositoryImpl.new);
-    
 
+    i.addSingleton(DeleteNewsSaveUseCase.new);
+    i.addSingleton(GetNewsSaveUseCase.new);
+    i.addSingleton<SavesDbRepository>(SavesDbRepositoryImpl.new);
+    i.addLazySingleton(SavesStore.new);
+    
     i.addSingleton(AppSettingsLanguage.new);
   }
 

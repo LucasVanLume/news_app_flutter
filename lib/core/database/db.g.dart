@@ -10,14 +10,12 @@ part of 'db.dart';
 class $FloorAppDatabase {
   /// Creates a database builder for a persistent database.
   /// Once a database is built, you should keep a reference to it and re-use it.
-  // ignore: library_private_types_in_public_api
   static _$AppDatabaseBuilder databaseBuilder(String name) =>
       _$AppDatabaseBuilder(name);
 
   /// Creates a database builder for an in memory database.
   /// Information stored in an in memory database disappears when the process is killed.
   /// Once a database is built, you should keep a reference to it and re-use it.
-  // ignore: library_private_types_in_public_api
   static _$AppDatabaseBuilder inMemoryDatabaseBuilder() =>
       _$AppDatabaseBuilder(null);
 }
@@ -87,7 +85,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `newsTable` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `author` TEXT, `title` TEXT, `url` TEXT, `urlToImage` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `newsTable` (`author` TEXT, `title` TEXT, `url` TEXT, `urlToImage` TEXT, PRIMARY KEY (`title`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -105,11 +103,21 @@ class _$NewsDao extends NewsDao {
   _$NewsDao(
     this.database,
     this.changeListener,
-  ) : _newsSaveInsertionAdapter = InsertionAdapter(
+  )   : _queryAdapter = QueryAdapter(database),
+        _newsSaveInsertionAdapter = InsertionAdapter(
             database,
             'newsTable',
             (NewsSave item) => <String, Object?>{
-                  'id': item.id,
+                  'author': item.author,
+                  'title': item.title,
+                  'url': item.url,
+                  'urlToImage': item.urlToImage
+                }),
+        _newsSaveDeletionAdapter = DeletionAdapter(
+            database,
+            'newsTable',
+            ['title'],
+            (NewsSave item) => <String, Object?>{
                   'author': item.author,
                   'title': item.title,
                   'url': item.url,
@@ -120,10 +128,29 @@ class _$NewsDao extends NewsDao {
 
   final StreamController<String> changeListener;
 
+  final QueryAdapter _queryAdapter;
+
   final InsertionAdapter<NewsSave> _newsSaveInsertionAdapter;
+
+  final DeletionAdapter<NewsSave> _newsSaveDeletionAdapter;
+
+  @override
+  Future<List<NewsSave>> getAllNews() async {
+    return _queryAdapter.queryList('SELECT * FROM NewsTable',
+        mapper: (Map<String, Object?> row) => NewsSave(
+            author: row['author'] as String?,
+            title: row['title'] as String?,
+            url: row['url'] as String?,
+            urlToImage: row['urlToImage'] as String?));
+  }
 
   @override
   Future<void> insertNews(NewsSave news) async {
     await _newsSaveInsertionAdapter.insert(news, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> deleteNews(NewsSave news) async {
+    await _newsSaveDeletionAdapter.delete(news);
   }
 }
