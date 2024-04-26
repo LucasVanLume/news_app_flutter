@@ -1,13 +1,8 @@
-// import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_entity.dart';
-import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_save_entity.dart';
+import 'package:flutter_clean_architecture/src/features/saves/domain/entities/news_saved_entity.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/errors/saves_error.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/states/saves_state.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/usecases/delete_news_save_usecase.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/usecases/get_news_save_usecase.dart';
-// import 'package:flutter_clean_architecture/src/features/home/domain/errors/home_error.dart';
-// import 'package:flutter_clean_architecture/src/features/home/domain/states/home_state.dart';
-// import 'package:flutter_clean_architecture/src/features/home/domain/usecases/get_news_usecase.dart';
-// import 'package:flutter_clean_architecture/src/features/home/domain/usecases/save_news_usecase.dart';
 import 'package:mobx/mobx.dart';
 
 
@@ -27,7 +22,7 @@ abstract class _SavesStoreBase with Store {
   SavesState state = const StartState();
 
   @observable
-  List<NewsSave>? newsSaveList;
+  List<NewsSaved>? newsSavedList;
 
   @observable
   bool isLoading = false;
@@ -39,9 +34,8 @@ abstract class _SavesStoreBase with Store {
 
     try {
       final news = await _getNewsSaveUseCase.callGetNewsSaveUseCase();
-      newsSaveList = news;
-      //print(newsSaveList);
-      state = SuccessState(newsSaveList!);
+      newsSavedList = news;
+      state = SuccessState(newsSavedList!);
     } on Failure catch (e) {
       state = ErrorState(e);
     } finally {
@@ -50,7 +44,7 @@ abstract class _SavesStoreBase with Store {
   }
 
   @action
-  Future<void> deleteSaves(NewsSave newsDelete) async {
+  Future<void> deleteSaves(NewsSaved newsDelete) async {
     isLoading = true;
 
     try {
@@ -73,8 +67,8 @@ abstract class _SavesStoreBase with Store {
   }
 
   @action
-  void updateNewsList(List<NewsSave> news) {
-    newsSaveList = news;
+  void updateNewsList(List<NewsSaved> news) {
+    newsSavedList = news;
   }
 
   @action
@@ -88,7 +82,7 @@ abstract class _SavesStoreBase with Store {
   }
 
   @action
-  List<NewsSave>? getNewsList() {
-    return newsSaveList;
+  List<NewsSaved>? getNewsList() {
+    return newsSavedList;
   }
 }

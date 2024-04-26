@@ -10,12 +10,14 @@ part of 'db.dart';
 class $FloorAppDatabase {
   /// Creates a database builder for a persistent database.
   /// Once a database is built, you should keep a reference to it and re-use it.
+  // ignore: library_private_types_in_public_api
   static _$AppDatabaseBuilder databaseBuilder(String name) =>
       _$AppDatabaseBuilder(name);
 
   /// Creates a database builder for an in memory database.
   /// Information stored in an in memory database disappears when the process is killed.
   /// Once a database is built, you should keep a reference to it and re-use it.
+  // ignore: library_private_types_in_public_api
   static _$AppDatabaseBuilder inMemoryDatabaseBuilder() =>
       _$AppDatabaseBuilder(null);
 }
@@ -61,7 +63,9 @@ class _$AppDatabase extends AppDatabase {
     changeListener = listener ?? StreamController<String>.broadcast();
   }
 
-  NewsDao? _newsDaoInstance;
+  NewsInsertDao? _newsInsertDaoInstance;
+
+  NewsGetDeltDao? _newsGetDeltDaoInstance;
 
   Future<sqflite.Database> open(
     String path,
@@ -85,7 +89,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `newsTable` (`author` TEXT, `title` TEXT, `url` TEXT, `urlToImage` TEXT, PRIMARY KEY (`title`))');
+            'CREATE TABLE IF NOT EXISTS `newsTable` (`author` TEXT, `title` TEXT, `url` TEXT, `urlToImage` TEXT, PRIMARY KEY (`author`, `title`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -94,30 +98,54 @@ class _$AppDatabase extends AppDatabase {
   }
 
   @override
-  NewsDao get newsDao {
-    return _newsDaoInstance ??= _$NewsDao(database, changeListener);
+  NewsInsertDao get newsInsertDao {
+    return _newsInsertDaoInstance ??= _$NewsInsertDao(database, changeListener);
+  }
+
+  @override
+  NewsGetDeltDao get newsGetDeltDao {
+    return _newsGetDeltDaoInstance ??=
+        _$NewsGetDeltDao(database, changeListener);
   }
 }
 
-class _$NewsDao extends NewsDao {
-  _$NewsDao(
+class _$NewsInsertDao extends NewsInsertDao {
+  _$NewsInsertDao(
     this.database,
     this.changeListener,
-  )   : _queryAdapter = QueryAdapter(database),
-        _newsSaveInsertionAdapter = InsertionAdapter(
+  ) : _newsSaveModelCoreInsertionAdapter = InsertionAdapter(
             database,
             'newsTable',
-            (NewsSave item) => <String, Object?>{
+            (NewsSaveModelCore item) => <String, Object?>{
                   'author': item.author,
                   'title': item.title,
                   'url': item.url,
                   'urlToImage': item.urlToImage
-                }),
-        _newsSaveDeletionAdapter = DeletionAdapter(
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final InsertionAdapter<NewsSaveModelCore> _newsSaveModelCoreInsertionAdapter;
+
+  @override
+  Future<void> insertNews(NewsSaveModelCore news) async {
+    await _newsSaveModelCoreInsertionAdapter.insert(
+        news, OnConflictStrategy.replace);
+  }
+}
+
+class _$NewsGetDeltDao extends NewsGetDeltDao {
+  _$NewsGetDeltDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _newsSaveModelCoreDeletionAdapter = DeletionAdapter(
             database,
             'newsTable',
-            ['title'],
-            (NewsSave item) => <String, Object?>{
+            ['author', 'title'],
+            (NewsSaveModelCore item) => <String, Object?>{
                   'author': item.author,
                   'title': item.title,
                   'url': item.url,
@@ -130,14 +158,12 @@ class _$NewsDao extends NewsDao {
 
   final QueryAdapter _queryAdapter;
 
-  final InsertionAdapter<NewsSave> _newsSaveInsertionAdapter;
-
-  final DeletionAdapter<NewsSave> _newsSaveDeletionAdapter;
+  final DeletionAdapter<NewsSaveModelCore> _newsSaveModelCoreDeletionAdapter;
 
   @override
-  Future<List<NewsSave>> getAllNews() async {
-    return _queryAdapter.queryList('SELECT * FROM NewsTable',
-        mapper: (Map<String, Object?> row) => NewsSave(
+  Future<List<NewsSaveModelCore>> getAllNews() async {
+    return _queryAdapter.queryList('SELECT * FROM newsTable',
+        mapper: (Map<String, Object?> row) => NewsSaveModelCore(
             author: row['author'] as String?,
             title: row['title'] as String?,
             url: row['url'] as String?,
@@ -145,12 +171,7 @@ class _$NewsDao extends NewsDao {
   }
 
   @override
-  Future<void> insertNews(NewsSave news) async {
-    await _newsSaveInsertionAdapter.insert(news, OnConflictStrategy.replace);
-  }
-
-  @override
-  Future<void> deleteNews(NewsSave news) async {
-    await _newsSaveDeletionAdapter.delete(news);
+  Future<void> deleteNews(NewsSaveModelCore news) async {
+    await _newsSaveModelCoreDeletionAdapter.delete(news);
   }
 }

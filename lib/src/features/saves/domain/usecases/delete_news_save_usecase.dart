@@ -1,15 +1,16 @@
-import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_save_entity.dart';
+import 'package:flutter_clean_architecture/core/domain/usecases/delete_news_save__core_usecase.dart';
+import 'package:flutter_clean_architecture/src/features/saves/domain/entities/news_saved_entity.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/errors/saves_error.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/repositories/saves_db_repository.dart';
 
 
-class DeleteNewsSaveUseCase {
+class DeleteNewsSaveUseCase implements DeleteNewsSaveUseCaseCore<NewsSaved> {
   final SavesDbRepository savesDbRepository;
 
   DeleteNewsSaveUseCase({required this.savesDbRepository});
 
-
-  Future<void> callDeleteNewsSaveUseCase(NewsSave newsDelete) async {
+  @override
+  Future<void> callDeleteNewsSaveUseCase(NewsSaved newsDelete) async {
     try {
       await savesDbRepository.deleteNews(newsDelete);
     } on Failure catch (e) {

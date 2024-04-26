@@ -6,7 +6,7 @@ import 'package:flutter_clean_architecture/src/features/auth/data/services/auth_
 import 'package:flutter_clean_architecture/src/features/auth/domain/repositories/auth_repository.dart';
 import 'package:flutter_clean_architecture/src/features/auth/domain/usecases/auth_login_usecase.dart';
 import 'package:flutter_clean_architecture/src/features/auth/domain/usecases/auth_logout_usecase.dart';
-import 'package:flutter_clean_architecture/core/database/db.dart';
+import 'package:flutter_clean_architecture/core/data/datasource/db.dart';
 import 'package:flutter_clean_architecture/src/features/home/data/repositories/home_db_repository_impl.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/repositories/home_db_repository.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/usecases/get_news_usecase.dart';

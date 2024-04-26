@@ -1,5 +1,6 @@
-import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_save_entity.dart';
+import 'package:flutter_clean_architecture/src/features/saves/domain/entities/news_saved_entity.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/errors/saves_error.dart';
+
 
 abstract class SavesState {}
 
@@ -17,6 +18,6 @@ class ErrorState implements SavesState {
 }
 
 class SuccessState implements SavesState {
-  final List<NewsSave> list;
+  final List<NewsSaved> list;
   const SuccessState(this.list);
 }

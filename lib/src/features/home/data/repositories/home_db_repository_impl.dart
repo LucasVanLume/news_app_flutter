@@ -1,4 +1,5 @@
-import 'package:flutter_clean_architecture/core/database/db.dart';
+import 'package:flutter_clean_architecture/core/data/datasource/db.dart';
+import 'package:flutter_clean_architecture/core/data/models/news_save_model_core.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_save_entity.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/errors/home_error.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/repositories/home_db_repository.dart';
@@ -11,8 +12,9 @@ class HomeDbRepositoryImpl implements HomeDbRepository {
 
   @override
   Future<void> saveNews(NewsSave news) async {
-    try {      
-      return appDatabase.db.newsDao.insertNews(news);
+    try {
+      NewsSaveModelCore newsSaveModelcore = NewsSaveModelCore.fromNewsSave(news);
+      await appDatabase.db.newsInsertDao.insertNews(newsSaveModelcore);
     } on Failure catch (e) {
       throw Exception(e);
     }

@@ -1,5 +1,7 @@
-import 'package:flutter_clean_architecture/core/database/db.dart';
-import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_save_entity.dart';
+import 'package:flutter_clean_architecture/core/data/datasource/db.dart';
+import 'package:flutter_clean_architecture/core/data/models/news_save_model_core.dart';
+import 'package:flutter_clean_architecture/src/features/saves/data/models/news_saved_model.dart';
+import 'package:flutter_clean_architecture/src/features/saves/domain/entities/news_saved_entity.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/errors/saves_error.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/repositories/saves_db_repository.dart';
 
@@ -9,19 +11,24 @@ class SavesDbRepositoryImpl implements SavesDbRepository {
   SavesDbRepositoryImpl({required this.appDatabase});
 
   @override
-  Future<void> deleteNews(NewsSave news) {
+  Future<void> deleteNews(NewsSaved news) async {
     try {
-      print(news.title);      
-      return appDatabase.db.newsDao.deleteNews(news);
+      //NewsSavedModel newsSavedModel = NewsSavedModel.fromNewsSaved(news);
+      // NewsSaveModelCore newsSaveModelCore = NewsSaveModelCore.fromNewsSaved(news);
+      NewsSaveModelCore newsSaveModelCore = NewsSavedModel.toNewsSavedModelCore(news);
+      return appDatabase.db.newsGetDeltDao.deleteNews(newsSaveModelCore);
     } on Failure catch (e) {
       throw Exception(e);
     }
   }
 
   @override
-  Future<List<NewsSave>> getSavedNews() {
+  Future<List<NewsSaved>> getSavedNews() async {
     try {      
-      return appDatabase.db.newsDao.getAllNews();
+      List<NewsSaveModelCore> newsSaveModelcore = await appDatabase.db.newsGetDeltDao.getAllNews();
+      //List<NewsSaved> newsSaved = newsSaveModelcore.map((model) => model.toNewsSaved()).toList();
+      List<NewsSaved> newsSaved = newsSaveModelcore.map((model) => NewsSavedModel.fromNewsSaveModelCore(model)).toList();
+      return newsSaved;
     } on Failure catch (e) {
       throw Exception(e);
     }

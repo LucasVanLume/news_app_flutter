@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_save_entity.dart';
+import 'package:flutter_clean_architecture/src/features/saves/domain/entities/news_saved_entity.dart';
 import 'package:flutter_clean_architecture/src/features/saves/ui/widgets/saves_news_save_list_item.dart';
 
 
 class SavesNewsSaveList extends StatefulWidget {
-  final List<NewsSave> listNewsSave;
+  final List<NewsSaved> listNewsSave;
   const SavesNewsSaveList({super.key, required this.listNewsSave});
 
   @override

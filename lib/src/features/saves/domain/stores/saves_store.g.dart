@@ -25,19 +25,19 @@ mixin _$SavesStore on _SavesStoreBase, Store {
     });
   }
 
-  late final _$newsSaveListAtom =
-      Atom(name: '_SavesStoreBase.newsSaveList', context: context);
+  late final _$newsSavedListAtom =
+      Atom(name: '_SavesStoreBase.newsSavedList', context: context);
 
   @override
-  List<NewsSave>? get newsSaveList {
-    _$newsSaveListAtom.reportRead();
-    return super.newsSaveList;
+  List<NewsSaved>? get newsSavedList {
+    _$newsSavedListAtom.reportRead();
+    return super.newsSavedList;
   }
 
   @override
-  set newsSaveList(List<NewsSave>? value) {
-    _$newsSaveListAtom.reportWrite(value, super.newsSaveList, () {
-      super.newsSaveList = value;
+  set newsSavedList(List<NewsSaved>? value) {
+    _$newsSavedListAtom.reportWrite(value, super.newsSavedList, () {
+      super.newsSavedList = value;
     });
   }
 
@@ -69,7 +69,7 @@ mixin _$SavesStore on _SavesStoreBase, Store {
       AsyncAction('_SavesStoreBase.deleteSaves', context: context);
 
   @override
-  Future<void> deleteSaves(NewsSave newsDelete) {
+  Future<void> deleteSaves(NewsSaved newsDelete) {
     return _$deleteSavesAsyncAction.run(() => super.deleteSaves(newsDelete));
   }
 
@@ -85,7 +85,7 @@ mixin _$SavesStore on _SavesStoreBase, Store {
       ActionController(name: '_SavesStoreBase', context: context);
 
   @override
-  void updateNewsList(List<NewsSave> news) {
+  void updateNewsList(List<NewsSaved> news) {
     final _$actionInfo = _$_SavesStoreBaseActionController.startAction(
         name: '_SavesStoreBase.updateNewsList');
     try {
@@ -107,7 +107,7 @@ mixin _$SavesStore on _SavesStoreBase, Store {
   }
 
   @override
-  List<NewsSave>? getNewsList() {
+  List<NewsSaved>? getNewsList() {
     final _$actionInfo = _$_SavesStoreBaseActionController.startAction(
         name: '_SavesStoreBase.getNewsList');
     try {
@@ -121,7 +121,7 @@ mixin _$SavesStore on _SavesStoreBase, Store {
   String toString() {
     return '''
 state: ${state},
-newsSaveList: ${newsSaveList},
+newsSavedList: ${newsSavedList},
 isLoading: ${isLoading}
     ''';
   }

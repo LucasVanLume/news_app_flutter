@@ -1,24 +1,18 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_clean_architecture/src/app_theme.dart';
-import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_save_entity.dart';
+import 'package:flutter_clean_architecture/src/features/saves/domain/entities/news_saved_entity.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/stores/saves_store.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
 class SavesNewsSaveListItem extends StatelessWidget {
-  //final int idxNews;
-  //final int id;
   final String author; 
   final String title;
   final String urlToImage;
   final String url;
   const SavesNewsSaveListItem(
       {super.key,
-      //required this.idxNews,
-      //required this.id,
       required this.author,
       required this.title,
       required this.urlToImage,
@@ -83,7 +77,7 @@ class SavesNewsSaveListItem extends StatelessWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(56),
                 onTap: () async {
-                  final newsDelete = NewsSave(author: author, title: title, url: url, urlToImage: urlToImage);
+                  final newsDelete = NewsSaved(author: author, title: title, url: url, urlToImage: urlToImage);
 
                   savesStore.deleteSaves(newsDelete);
                 },
