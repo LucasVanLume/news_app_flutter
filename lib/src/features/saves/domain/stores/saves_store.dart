@@ -48,17 +48,13 @@ abstract class _SavesStoreBase with Store {
     isLoading = true;
 
     try {
-      //print(newsSaveList!.length);
-      //print(newsDelete.id);
       await _deleteNewsSaveUseCase.callDeleteNewsSaveUseCase(newsDelete);
 
-      // final news = await _getNewsSaveUseCase.callGetNewsSaveUseCase();
-      // newsSaveList = news;
-      // print(newsSaveList!.length);
-      // //print(newsSaveList);
-      // state = SuccessState(newsSaveList!);
+      final news = await _getNewsSaveUseCase.callGetNewsSaveUseCase();
+      newsSavedList = news;
 
-      //state = SuccessState(newsSaveList!);
+      state = SuccessState(newsSavedList!);
+
     } on Failure catch (e) {
       state = ErrorState(e);
     } finally {
