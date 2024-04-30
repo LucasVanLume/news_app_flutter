@@ -56,6 +56,22 @@ mixin _$HomeStore on _HomeStoreBase, Store {
     });
   }
 
+  late final _$newsFavoriteAtom =
+      Atom(name: '_HomeStoreBase.newsFavorite', context: context);
+
+  @override
+  NewsFavorite? get newsFavorite {
+    _$newsFavoriteAtom.reportRead();
+    return super.newsFavorite;
+  }
+
+  @override
+  set newsFavorite(NewsFavorite? value) {
+    _$newsFavoriteAtom.reportWrite(value, super.newsFavorite, () {
+      super.newsFavorite = value;
+    });
+  }
+
   late final _$isLoadingAtom =
       Atom(name: '_HomeStoreBase.isLoading', context: context);
 
@@ -102,6 +118,15 @@ mixin _$HomeStore on _HomeStoreBase, Store {
     _$isSearchingAtom.reportWrite(value, super.isSearching, () {
       super.isSearching = value;
     });
+  }
+
+  late final _$favoriteNewsAsyncAction =
+      AsyncAction('_HomeStoreBase.favoriteNews', context: context);
+
+  @override
+  Future<void> favoriteNews(NewsFavorite newsfavoriting) {
+    return _$favoriteNewsAsyncAction
+        .run(() => super.favoriteNews(newsfavoriting));
   }
 
   late final _$saveNewsAsyncAction =
@@ -195,6 +220,7 @@ mixin _$HomeStore on _HomeStoreBase, Store {
 state: ${state},
 newsList: ${newsList},
 newsSave: ${newsSave},
+newsFavorite: ${newsFavorite},
 isLoading: ${isLoading},
 isRefreshNews: ${isRefreshNews},
 isSearching: ${isSearching}

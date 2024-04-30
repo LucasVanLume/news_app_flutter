@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/src/app_theme.dart';
+import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_favorite_entity.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_save_entity.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/stores/home_store.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -99,7 +100,11 @@ class HomeNewsListItem extends StatelessWidget {
                 ),
                 const SizedBox(width: 40,),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    final newsFavorite = NewsFavorite(author: author, title: title, url: url, urlToImage: urlToImage);
+
+                    homeStore.favoriteNews(newsFavorite);
+                  },
                   icon: const Icon(
                     Icons.favorite_border,
                     color: AppTheme.iconNavBar,
@@ -107,9 +112,9 @@ class HomeNewsListItem extends StatelessWidget {
                 ),
                 IconButton(
                   onPressed: () async {
-                    final news = NewsSave(author: author, title: title, url: url, urlToImage: urlToImage);
+                    final newsSave = NewsSave(author: author, title: title, url: url, urlToImage: urlToImage);
 
-                    homeStore.saveNews(news);
+                    homeStore.saveNews(newsSave);
                   },
                   icon: const Icon(
                     Icons.bookmark_border,

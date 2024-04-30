@@ -1,7 +1,9 @@
 import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_entity.dart';
+import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_favorite_entity.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/entities/news_save_entity.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/errors/home_error.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/states/home_state.dart';
+import 'package:flutter_clean_architecture/src/features/home/domain/usecases/favorite_news_usecase.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/usecases/get_news_usecase.dart';
 import 'package:flutter_clean_architecture/src/features/home/domain/usecases/save_news_usecase.dart';
 import 'package:mobx/mobx.dart';
@@ -16,8 +18,9 @@ class HomeStore = _HomeStoreBase with _$HomeStore;
 abstract class _HomeStoreBase with Store {
   final GetNewsUseCase _useCase;
   final SaveNewsUseCase _saveNewsUseCase;
+  final FavoriteNewsUseCase _favoriteNewsUseCase;
 
-  _HomeStoreBase(this._useCase, this._saveNewsUseCase);
+  _HomeStoreBase(this._useCase, this._saveNewsUseCase, this._favoriteNewsUseCase);
 
   @observable
   HomeState state = const StartState();
@@ -29,6 +32,9 @@ abstract class _HomeStoreBase with Store {
   NewsSave? newsSave;
 
   @observable
+  NewsFavorite? newsFavorite;
+
+  @observable
   bool isLoading = false;
 
   @observable
@@ -36,6 +42,20 @@ abstract class _HomeStoreBase with Store {
 
   @observable
   bool isSearching = false;
+
+  @action
+  Future<void> favoriteNews(NewsFavorite newsfavoriting) async {
+    isLoading = true;
+
+    try {
+      newsFavorite = newsfavoriting;
+      await _favoriteNewsUseCase.callFavoriteNewsUseCase(newsFavorite!);
+    } on Failure catch (e) {
+      state = ErrorState(e);
+    } finally {
+      isLoading = false;
+    }
+  }
 
   @action
   Future<void> saveNews(NewsSave newsSaving) async {

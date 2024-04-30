@@ -10,14 +10,12 @@ part of 'db.dart';
 class $FloorAppDatabase {
   /// Creates a database builder for a persistent database.
   /// Once a database is built, you should keep a reference to it and re-use it.
-  // ignore: library_private_types_in_public_api
   static _$AppDatabaseBuilder databaseBuilder(String name) =>
       _$AppDatabaseBuilder(name);
 
   /// Creates a database builder for an in memory database.
   /// Information stored in an in memory database disappears when the process is killed.
   /// Once a database is built, you should keep a reference to it and re-use it.
-  // ignore: library_private_types_in_public_api
   static _$AppDatabaseBuilder inMemoryDatabaseBuilder() =>
       _$AppDatabaseBuilder(null);
 }
@@ -90,6 +88,8 @@ class _$AppDatabase extends AppDatabase {
       onCreate: (database, version) async {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `newsTable` (`author` TEXT, `title` TEXT, `url` TEXT, `urlToImage` TEXT, PRIMARY KEY (`author`, `title`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `newsFavoriteTable` (`author` TEXT, `title` TEXT, `url` TEXT, `urlToImage` TEXT, PRIMARY KEY (`author`, `title`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -113,10 +113,19 @@ class _$NewsInsertDao extends NewsInsertDao {
   _$NewsInsertDao(
     this.database,
     this.changeListener,
-  ) : _newsSaveModelCoreInsertionAdapter = InsertionAdapter(
+  )   : _newsSaveModelCoreInsertionAdapter = InsertionAdapter(
             database,
             'newsTable',
             (NewsSaveModelCore item) => <String, Object?>{
+                  'author': item.author,
+                  'title': item.title,
+                  'url': item.url,
+                  'urlToImage': item.urlToImage
+                }),
+        _newsFavoriteModelCoreInsertionAdapter = InsertionAdapter(
+            database,
+            'newsFavoriteTable',
+            (NewsFavoriteModelCore item) => <String, Object?>{
                   'author': item.author,
                   'title': item.title,
                   'url': item.url,
@@ -129,10 +138,19 @@ class _$NewsInsertDao extends NewsInsertDao {
 
   final InsertionAdapter<NewsSaveModelCore> _newsSaveModelCoreInsertionAdapter;
 
+  final InsertionAdapter<NewsFavoriteModelCore>
+      _newsFavoriteModelCoreInsertionAdapter;
+
   @override
-  Future<void> insertNews(NewsSaveModelCore news) async {
+  Future<void> insertNewsSave(NewsSaveModelCore newsSave) async {
     await _newsSaveModelCoreInsertionAdapter.insert(
-        news, OnConflictStrategy.replace);
+        newsSave, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> insertNewsFavorite(NewsFavoriteModelCore newsFavorite) async {
+    await _newsFavoriteModelCoreInsertionAdapter.insert(
+        newsFavorite, OnConflictStrategy.replace);
   }
 }
 
