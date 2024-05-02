@@ -12,7 +12,7 @@ class DeleteNewsSaveUseCase implements DeleteNewsSaveUseCaseCore<NewsSaved> {
   @override
   Future<void> callDeleteNewsSaveUseCase(NewsSaved newsDelete) async {
     try {
-      await savesDbRepository.deleteNews(newsDelete);
+      await savesDbRepository.deleteNewsSaved(newsDelete);
     } on Failure catch (e) {
       throw Exception(e);
     }

@@ -1,3 +1,4 @@
+import 'package:flutter_clean_architecture/src/features/saves/domain/entities/news_favorited_entity.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/entities/news_saved_entity.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/errors/saves_error.dart';
 
@@ -18,6 +19,7 @@ class ErrorState implements SavesState {
 }
 
 class SuccessState implements SavesState {
-  final List<NewsSaved> list;
-  const SuccessState(this.list);
+  final List<NewsSaved> listSaved;
+  final List<NewsFavorited> listFavorited;
+  const SuccessState(this.listSaved, this.listFavorited);
 }

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/src/app_theme.dart';
-import 'package:flutter_clean_architecture/src/features/saves/domain/entities/news_saved_entity.dart';
-import 'package:flutter_clean_architecture/src/features/saves/domain/stores/saves_store.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -11,12 +8,14 @@ class SavesNewsSaveListItem extends StatelessWidget {
   final String title;
   final String urlToImage;
   final String url;
+  final Function() onTapDelete;
   const SavesNewsSaveListItem(
       {super.key,
       required this.author,
       required this.title,
       required this.urlToImage,
-      required this.url,});
+      required this.url,
+      required this.onTapDelete,});
 
   Future<void> launchUri(uri) async {
     Uri url = Uri.parse(uri);
@@ -27,7 +26,6 @@ class SavesNewsSaveListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final savesStore = Modular.get<SavesStore>();
     Size size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
@@ -76,11 +74,7 @@ class SavesNewsSaveListItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(56),
               child: InkWell(
                 borderRadius: BorderRadius.circular(56),
-                onTap: () async {
-                  final newsDelete = NewsSaved(author: author, title: title, url: url, urlToImage: urlToImage);
-
-                  savesStore.deleteSaves(newsDelete);
-                },
+                onTap: onTapDelete,
                 child: SizedBox(
                   width: 30,
                   height: 30,

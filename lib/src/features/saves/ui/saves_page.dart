@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/states/saves_state.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/stores/saves_store.dart';
-import 'package:flutter_clean_architecture/src/features/saves/ui/widgets/saves_news_save_list.dart';
+import 'package:flutter_clean_architecture/src/features/saves/ui/saves_news_main.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -45,13 +45,15 @@ class _SavesPageState extends State<SavesPage> {
                 );
 
               } else if (state is SuccessState) {
-                return SafeArea(
-                  child: CustomScrollView(
-                    slivers: [
-                      SavesNewsSaveList(listNewsSave: state.list)
-                    ],
-                  )
-                );
+                return SavesNewsMain(listNewsSave: state.listSaved, listNewsFavorite: state.listFavorited);
+                // SafeArea(
+                //   child: CustomScrollView(
+                //     slivers: [
+                //       //SavesNewsMain(),
+                //       SavesNewsSaveList(listNewsSave: state.list)
+                //     ],
+                //   )
+                // );
 
               } else {
                 return Container();

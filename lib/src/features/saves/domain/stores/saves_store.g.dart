@@ -41,6 +41,22 @@ mixin _$SavesStore on _SavesStoreBase, Store {
     });
   }
 
+  late final _$newsFavoritedListAtom =
+      Atom(name: '_SavesStoreBase.newsFavoritedList', context: context);
+
+  @override
+  List<NewsFavorited>? get newsFavoritedList {
+    _$newsFavoritedListAtom.reportRead();
+    return super.newsFavoritedList;
+  }
+
+  @override
+  set newsFavoritedList(List<NewsFavorited>? value) {
+    _$newsFavoritedListAtom.reportWrite(value, super.newsFavoritedList, () {
+      super.newsFavoritedList = value;
+    });
+  }
+
   late final _$isLoadingAtom =
       Atom(name: '_SavesStoreBase.isLoading', context: context);
 
@@ -122,6 +138,7 @@ mixin _$SavesStore on _SavesStoreBase, Store {
     return '''
 state: ${state},
 newsSavedList: ${newsSavedList},
+newsFavoritedList: ${newsFavoritedList},
 isLoading: ${isLoading}
     ''';
   }

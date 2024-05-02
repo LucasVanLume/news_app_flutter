@@ -1,7 +1,9 @@
+import 'package:flutter_clean_architecture/src/features/saves/domain/entities/news_favorited_entity.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/entities/news_saved_entity.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/errors/saves_error.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/states/saves_state.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/usecases/delete_news_save_usecase.dart';
+import 'package:flutter_clean_architecture/src/features/saves/domain/usecases/get_news_favorite_usecase.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/usecases/get_news_save_usecase.dart';
 import 'package:mobx/mobx.dart';
 
@@ -15,14 +17,18 @@ class SavesStore = _SavesStoreBase with _$SavesStore;
 abstract class _SavesStoreBase with Store {
   final GetNewsSaveUseCase _getNewsSaveUseCase;
   final DeleteNewsSaveUseCase _deleteNewsSaveUseCase;
+  final GetNewsFavoriteUseCase _getNewsFavoriteUseCase;
 
-  _SavesStoreBase(this._getNewsSaveUseCase, this._deleteNewsSaveUseCase);
+  _SavesStoreBase(this._getNewsSaveUseCase, this._deleteNewsSaveUseCase, this._getNewsFavoriteUseCase);
 
   @observable
   SavesState state = const StartState();
 
   @observable
   List<NewsSaved>? newsSavedList;
+
+  @observable
+  List<NewsFavorited>? newsFavoritedList;
 
   @observable
   bool isLoading = false;
@@ -33,9 +39,11 @@ abstract class _SavesStoreBase with Store {
     state = const LoadingState();
 
     try {
-      final news = await _getNewsSaveUseCase.callGetNewsSaveUseCase();
-      newsSavedList = news;
-      state = SuccessState(newsSavedList!);
+      final newsSaved = await _getNewsSaveUseCase.callGetNewsSaveUseCase();
+      newsSavedList = newsSaved;
+      final newsFavorited = await _getNewsFavoriteUseCase.callGetNewsFavoriteUseCase();
+      newsFavoritedList = newsFavorited;
+      state = SuccessState(newsSavedList!, newsFavoritedList!);
     } on Failure catch (e) {
       state = ErrorState(e);
     } finally {
@@ -53,7 +61,7 @@ abstract class _SavesStoreBase with Store {
       final news = await _getNewsSaveUseCase.callGetNewsSaveUseCase();
       newsSavedList = news;
 
-      state = SuccessState(newsSavedList!);
+      state = SuccessState(newsSavedList!, newsFavoritedList!);
 
     } on Failure catch (e) {
       state = ErrorState(e);

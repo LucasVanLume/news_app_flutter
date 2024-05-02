@@ -10,12 +10,14 @@ part of 'db.dart';
 class $FloorAppDatabase {
   /// Creates a database builder for a persistent database.
   /// Once a database is built, you should keep a reference to it and re-use it.
+  // ignore: library_private_types_in_public_api
   static _$AppDatabaseBuilder databaseBuilder(String name) =>
       _$AppDatabaseBuilder(name);
 
   /// Creates a database builder for an in memory database.
   /// Information stored in an in memory database disappears when the process is killed.
   /// Once a database is built, you should keep a reference to it and re-use it.
+  // ignore: library_private_types_in_public_api
   static _$AppDatabaseBuilder inMemoryDatabaseBuilder() =>
       _$AppDatabaseBuilder(null);
 }
@@ -179,7 +181,7 @@ class _$NewsGetDeltDao extends NewsGetDeltDao {
   final DeletionAdapter<NewsSaveModelCore> _newsSaveModelCoreDeletionAdapter;
 
   @override
-  Future<List<NewsSaveModelCore>> getAllNews() async {
+  Future<List<NewsSaveModelCore>> getAllNewsSaved() async {
     return _queryAdapter.queryList('SELECT * FROM newsTable',
         mapper: (Map<String, Object?> row) => NewsSaveModelCore(
             author: row['author'] as String?,
@@ -189,7 +191,17 @@ class _$NewsGetDeltDao extends NewsGetDeltDao {
   }
 
   @override
-  Future<void> deleteNews(NewsSaveModelCore news) async {
-    await _newsSaveModelCoreDeletionAdapter.delete(news);
+  Future<List<NewsFavoriteModelCore>> getAllNewsFavorited() async {
+    return _queryAdapter.queryList('SELECT * FROM newsFavoriteTable',
+        mapper: (Map<String, Object?> row) => NewsFavoriteModelCore(
+            author: row['author'] as String?,
+            title: row['title'] as String?,
+            url: row['url'] as String?,
+            urlToImage: row['urlToImage'] as String?));
+  }
+
+  @override
+  Future<void> deleteNewsSaved(NewsSaveModelCore newsSaved) async {
+    await _newsSaveModelCoreDeletionAdapter.delete(newsSaved);
   }
 }
