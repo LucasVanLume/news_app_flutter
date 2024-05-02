@@ -10,14 +10,12 @@ part of 'db.dart';
 class $FloorAppDatabase {
   /// Creates a database builder for a persistent database.
   /// Once a database is built, you should keep a reference to it and re-use it.
-  // ignore: library_private_types_in_public_api
   static _$AppDatabaseBuilder databaseBuilder(String name) =>
       _$AppDatabaseBuilder(name);
 
   /// Creates a database builder for an in memory database.
   /// Information stored in an in memory database disappears when the process is killed.
   /// Once a database is built, you should keep a reference to it and re-use it.
-  // ignore: library_private_types_in_public_api
   static _$AppDatabaseBuilder inMemoryDatabaseBuilder() =>
       _$AppDatabaseBuilder(null);
 }
@@ -170,6 +168,16 @@ class _$NewsGetDeltDao extends NewsGetDeltDao {
                   'title': item.title,
                   'url': item.url,
                   'urlToImage': item.urlToImage
+                }),
+        _newsFavoriteModelCoreDeletionAdapter = DeletionAdapter(
+            database,
+            'newsFavoriteTable',
+            ['author', 'title'],
+            (NewsFavoriteModelCore item) => <String, Object?>{
+                  'author': item.author,
+                  'title': item.title,
+                  'url': item.url,
+                  'urlToImage': item.urlToImage
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -179,6 +187,9 @@ class _$NewsGetDeltDao extends NewsGetDeltDao {
   final QueryAdapter _queryAdapter;
 
   final DeletionAdapter<NewsSaveModelCore> _newsSaveModelCoreDeletionAdapter;
+
+  final DeletionAdapter<NewsFavoriteModelCore>
+      _newsFavoriteModelCoreDeletionAdapter;
 
   @override
   Future<List<NewsSaveModelCore>> getAllNewsSaved() async {
@@ -203,5 +214,10 @@ class _$NewsGetDeltDao extends NewsGetDeltDao {
   @override
   Future<void> deleteNewsSaved(NewsSaveModelCore newsSaved) async {
     await _newsSaveModelCoreDeletionAdapter.delete(newsSaved);
+  }
+
+  @override
+  Future<void> deleteNewsFavorited(NewsFavoriteModelCore newsFavorited) async {
+    await _newsFavoriteModelCoreDeletionAdapter.delete(newsFavorited);
   }
 }

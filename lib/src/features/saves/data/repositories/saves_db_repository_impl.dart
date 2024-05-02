@@ -13,6 +13,7 @@ class SavesDbRepositoryImpl implements SavesDbRepository {
 
   SavesDbRepositoryImpl({required this.appDatabase});
 
+  //Saved
   @override
   Future<void> deleteNewsSaved(NewsSaved news) async {
     try {
@@ -32,6 +33,17 @@ class SavesDbRepositoryImpl implements SavesDbRepository {
       //List<NewsSaved> newsSaved = newsSaveModelcore.map((model) => model.toNewsSaved()).toList();
       List<NewsSaved> newsSaved = newsSaveModelcore.map((model) => NewsSavedModel.fromNewsSaveModelCore(model)).toList();
       return newsSaved;
+    } on Failure catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  //Favorited
+  @override
+  Future<void> deleteNewsFavorited(NewsFavorited newsFavorited) {
+    try {
+      NewsFavoriteModelCore newsFavoriteModelCore = NewsFavoritedModel.toNewsFavoritedModelCore(newsFavorited);
+      return appDatabase.db.newsGetDeltDao.deleteNewsFavorited(newsFavoriteModelCore);
     } on Failure catch (e) {
       throw Exception(e);
     }

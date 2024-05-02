@@ -2,6 +2,7 @@ import 'package:flutter_clean_architecture/src/features/saves/domain/entities/ne
 import 'package:flutter_clean_architecture/src/features/saves/domain/entities/news_saved_entity.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/errors/saves_error.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/states/saves_state.dart';
+import 'package:flutter_clean_architecture/src/features/saves/domain/usecases/delete_news_favorite_usecase.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/usecases/delete_news_save_usecase.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/usecases/get_news_favorite_usecase.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/usecases/get_news_save_usecase.dart';
@@ -18,8 +19,9 @@ abstract class _SavesStoreBase with Store {
   final GetNewsSaveUseCase _getNewsSaveUseCase;
   final DeleteNewsSaveUseCase _deleteNewsSaveUseCase;
   final GetNewsFavoriteUseCase _getNewsFavoriteUseCase;
+  final DeleteNewsFavoriteUseCase _deleteNewsFavoriteUseCase;
 
-  _SavesStoreBase(this._getNewsSaveUseCase, this._deleteNewsSaveUseCase, this._getNewsFavoriteUseCase);
+  _SavesStoreBase(this._getNewsSaveUseCase, this._deleteNewsSaveUseCase, this._getNewsFavoriteUseCase, this._deleteNewsFavoriteUseCase);
 
   @observable
   SavesState state = const StartState();
@@ -44,6 +46,25 @@ abstract class _SavesStoreBase with Store {
       final newsFavorited = await _getNewsFavoriteUseCase.callGetNewsFavoriteUseCase();
       newsFavoritedList = newsFavorited;
       state = SuccessState(newsSavedList!, newsFavoritedList!);
+    } on Failure catch (e) {
+      state = ErrorState(e);
+    } finally {
+      isLoading = false;
+    }
+  }
+
+  @action
+  Future<void> deleteFavorites(NewsFavorited newsDelete) async {
+    isLoading = true;
+
+    try {
+      await _deleteNewsFavoriteUseCase.callDeleteNewsFavoriteUseCase(newsDelete);
+
+      final news = await _getNewsFavoriteUseCase.callGetNewsFavoriteUseCase();
+      newsFavoritedList = news;
+
+      state = SuccessState(newsSavedList!, newsFavoritedList!);
+
     } on Failure catch (e) {
       state = ErrorState(e);
     } finally {

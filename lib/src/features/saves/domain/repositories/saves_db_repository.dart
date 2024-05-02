@@ -3,10 +3,13 @@ import 'package:flutter_clean_architecture/src/features/saves/domain/entities/ne
 
 
 abstract class SavesDbRepository {
-
+  //Saved
   Future<void> deleteNewsSaved(NewsSaved newsSaved);
 
   Future<List<NewsSaved>> getSavedNews();
+
+  //Favorited
+  Future<void> deleteNewsFavorited(NewsFavorited newsFavorited);
 
   Future<List<NewsFavorited>> getFavoritedNews();
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/entities/news_favorited_entity.dart';
+import 'package:flutter_clean_architecture/src/features/saves/domain/stores/saves_store.dart';
 import 'package:flutter_clean_architecture/src/features/saves/ui/widgets/saves_news_save_list_item.dart';
 
 
@@ -12,6 +14,7 @@ class SavesNewsFavoriteList extends StatefulWidget {
 }
 
 class _SavesNewsFavoriteListState extends State<SavesNewsFavoriteList> {
+  final savesStore = Modular.get<SavesStore>();
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -28,7 +31,11 @@ class _SavesNewsFavoriteListState extends State<SavesNewsFavoriteList> {
           title: item.title!,
           urlToImage: item.urlToImage!,
           url: item.url!, 
-          onTapDelete: () {},
+          onTapDelete: () async {
+            final newsDelete = NewsFavorited(author: item.author, title: item.title, url: item.url, urlToImage: item.urlToImage);
+
+            savesStore.deleteFavorites(newsDelete);
+          },
         );  
       }       
     );

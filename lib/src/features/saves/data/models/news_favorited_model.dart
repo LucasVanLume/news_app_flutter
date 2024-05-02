@@ -29,7 +29,7 @@ class NewsFavoritedModel extends NewsFavorited {
     );
   }
 
-  static NewsFavoriteModelCore toNewsSavedModelCore(NewsFavorited newsFavorited) {
+  static NewsFavoriteModelCore toNewsFavoritedModelCore(NewsFavorited newsFavorited) {
     return NewsFavoriteModelCore(
       author: newsFavorited.author,
       title: newsFavorited.title,

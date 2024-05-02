@@ -81,6 +81,15 @@ mixin _$SavesStore on _SavesStoreBase, Store {
     return _$initSavesAsyncAction.run(() => super.initSaves());
   }
 
+  late final _$deleteFavoritesAsyncAction =
+      AsyncAction('_SavesStoreBase.deleteFavorites', context: context);
+
+  @override
+  Future<void> deleteFavorites(NewsFavorited newsDelete) {
+    return _$deleteFavoritesAsyncAction
+        .run(() => super.deleteFavorites(newsDelete));
+  }
+
   late final _$deleteSavesAsyncAction =
       AsyncAction('_SavesStoreBase.deleteSaves', context: context);
 
