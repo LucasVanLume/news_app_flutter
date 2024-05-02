@@ -40,6 +40,38 @@ mixin _$HomeStore on _HomeStoreBase, Store {
     });
   }
 
+  late final _$newsSaveAtom =
+      Atom(name: '_HomeStoreBase.newsSave', context: context);
+
+  @override
+  NewsSave? get newsSave {
+    _$newsSaveAtom.reportRead();
+    return super.newsSave;
+  }
+
+  @override
+  set newsSave(NewsSave? value) {
+    _$newsSaveAtom.reportWrite(value, super.newsSave, () {
+      super.newsSave = value;
+    });
+  }
+
+  late final _$newsFavoriteAtom =
+      Atom(name: '_HomeStoreBase.newsFavorite', context: context);
+
+  @override
+  NewsFavorite? get newsFavorite {
+    _$newsFavoriteAtom.reportRead();
+    return super.newsFavorite;
+  }
+
+  @override
+  set newsFavorite(NewsFavorite? value) {
+    _$newsFavoriteAtom.reportWrite(value, super.newsFavorite, () {
+      super.newsFavorite = value;
+    });
+  }
+
   late final _$isLoadingAtom =
       Atom(name: '_HomeStoreBase.isLoading', context: context);
 
@@ -70,6 +102,39 @@ mixin _$HomeStore on _HomeStoreBase, Store {
     _$isRefreshNewsAtom.reportWrite(value, super.isRefreshNews, () {
       super.isRefreshNews = value;
     });
+  }
+
+  late final _$isSearchingAtom =
+      Atom(name: '_HomeStoreBase.isSearching', context: context);
+
+  @override
+  bool get isSearching {
+    _$isSearchingAtom.reportRead();
+    return super.isSearching;
+  }
+
+  @override
+  set isSearching(bool value) {
+    _$isSearchingAtom.reportWrite(value, super.isSearching, () {
+      super.isSearching = value;
+    });
+  }
+
+  late final _$favoriteNewsAsyncAction =
+      AsyncAction('_HomeStoreBase.favoriteNews', context: context);
+
+  @override
+  Future<void> favoriteNews(NewsFavorite newsfavoriting) {
+    return _$favoriteNewsAsyncAction
+        .run(() => super.favoriteNews(newsfavoriting));
+  }
+
+  late final _$saveNewsAsyncAction =
+      AsyncAction('_HomeStoreBase.saveNews', context: context);
+
+  @override
+  Future<void> saveNews(NewsSave newsSaving) {
+    return _$saveNewsAsyncAction.run(() => super.saveNews(newsSaving));
   }
 
   late final _$fetchNewsAsyncAction =
@@ -103,6 +168,14 @@ mixin _$HomeStore on _HomeStoreBase, Store {
   Future<void> setISRefreshNews(bool boolean) {
     return _$setISRefreshNewsAsyncAction
         .run(() => super.setISRefreshNews(boolean));
+  }
+
+  late final _$setIsSearchingAsyncAction =
+      AsyncAction('_HomeStoreBase.setIsSearching', context: context);
+
+  @override
+  Future<void> setIsSearching(bool boolean) {
+    return _$setIsSearchingAsyncAction.run(() => super.setIsSearching(boolean));
   }
 
   late final _$_HomeStoreBaseActionController =
@@ -146,8 +219,11 @@ mixin _$HomeStore on _HomeStoreBase, Store {
     return '''
 state: ${state},
 newsList: ${newsList},
+newsSave: ${newsSave},
+newsFavorite: ${newsFavorite},
 isLoading: ${isLoading},
-isRefreshNews: ${isRefreshNews}
+isRefreshNews: ${isRefreshNews},
+isSearching: ${isSearching}
     ''';
   }
 }

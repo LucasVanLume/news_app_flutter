@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/firebase_options.dart';
 import 'package:flutter_clean_architecture/src/app_module.dart';
 import 'package:flutter_clean_architecture/src/app_widget.dart';
+import 'package:flutter_clean_architecture/core/data/datasource/db.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 Future<void> main() async {
@@ -10,9 +11,10 @@ Future<void> main() async {
   await Firebase.initializeApp(
   options: DefaultFirebaseOptions.currentPlatform,
   );
+  final database = await AppDatabaseLocal.initialize();
 
   runApp(ModularApp(
-    module: AppModule(),
+    module: AppModule(database: database),
     child: const AppWidget(),
   ));
 }

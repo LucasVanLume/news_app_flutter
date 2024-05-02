@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_clean_architecture/src/features/home/data/datasource/news_datasource.dart';
+import 'package:flutter_clean_architecture/src/features/home/data/datasource/remote/news_datasource.dart';
 import 'package:flutter_clean_architecture/src/features/home/data/models/news_model.dart';
 
 

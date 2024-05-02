@@ -22,6 +22,7 @@ class _HomeNewsListState extends State<HomeNewsList> {
           var item = widget.listNews[index];
 
           return HomeNewsListItem(
+            //idxNews: index,
             sourceName: item.source['name'],
             author: item.author!,
             title: item.title!,
