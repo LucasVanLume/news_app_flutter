@@ -2,6 +2,8 @@ import 'package:flutter_clean_architecture/src/features/saves/domain/entities/ne
 import 'package:flutter_clean_architecture/src/features/saves/domain/entities/news_saved_entity.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/errors/saves_error.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/states/saves_state.dart';
+import 'package:flutter_clean_architecture/src/features/saves/domain/usecases/favorite_news_usecase.dart';
+import 'package:flutter_clean_architecture/src/features/saves/domain/usecases/save_news_usecase.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/usecases/delete_news_favorite_usecase.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/usecases/delete_news_save_usecase.dart';
 import 'package:flutter_clean_architecture/src/features/saves/domain/usecases/get_news_favorite_usecase.dart';
@@ -20,8 +22,16 @@ abstract class _SavesStoreBase with Store {
   final DeleteNewsSaveUseCase _deleteNewsSaveUseCase;
   final GetNewsFavoriteUseCase _getNewsFavoriteUseCase;
   final DeleteNewsFavoriteUseCase _deleteNewsFavoriteUseCase;
+  final SaveNewsUseCase _saveNewsUseCase;
+  final FavoriteNewsUseCase _favoriteNewsUseCase;
 
-  _SavesStoreBase(this._getNewsSaveUseCase, this._deleteNewsSaveUseCase, this._getNewsFavoriteUseCase, this._deleteNewsFavoriteUseCase);
+  _SavesStoreBase(
+      this._getNewsSaveUseCase,
+      this._deleteNewsSaveUseCase,
+      this._getNewsFavoriteUseCase,
+      this._deleteNewsFavoriteUseCase,
+      this._saveNewsUseCase,
+      this._favoriteNewsUseCase);
 
   @observable
   SavesState state = const StartState();
@@ -33,7 +43,19 @@ abstract class _SavesStoreBase with Store {
   List<NewsFavorited>? newsFavoritedList;
 
   @observable
+  NewsSaved? newsSaved;
+
+  @observable
+  NewsFavorited? newsFavorited;
+
+  @observable
   bool isLoading = false;
+
+  @observable
+  bool isAtSaves = true;
+
+  @observable
+  bool isAtFavorites = false;
 
   @action
   Future<void> initSaves() async {
@@ -92,8 +114,55 @@ abstract class _SavesStoreBase with Store {
   }
 
   @action
-  void updateNewsList(List<NewsSaved> news) {
+  Future<void> saveNews(NewsSaved newsSaving) async {
+    isLoading = true;
+
+    try {
+      newsSaved = newsSaving;
+      await _saveNewsUseCase.callSaveNewsUseCase(newsSaved!);
+      // newsSavedList!.add(newsSaved!);
+
+      // SuccessState(newsSavedList!, newsFavoritedList!);
+      final news = await _getNewsSaveUseCase.callGetNewsSaveUseCase();
+      newsSavedList = news;
+
+      state = SuccessState(newsSavedList!, newsFavoritedList!);
+    } on Failure catch (e) {
+      state = ErrorState(e);
+    } finally {
+      isLoading = false;
+    }
+  }
+
+  @action
+  Future<void> favoriteNews(NewsFavorited newsFavoriting) async {
+    isLoading = true;
+
+    try {
+      newsFavorited = newsFavoriting;
+      await _favoriteNewsUseCase.callFavoriteNewsUseCase(newsFavorited!);
+      // newsSavedList!.add(newsSaved!);
+
+      // SuccessState(newsSavedList!, newsFavoritedList!);
+      final news = await _getNewsFavoriteUseCase.callGetNewsFavoriteUseCase();
+      newsFavoritedList = news;
+
+      state = SuccessState(newsSavedList!, newsFavoritedList!);
+    } on Failure catch (e) {
+      state = ErrorState(e);
+    } finally {
+      isLoading = false;
+    }
+  }
+
+  @action
+  void updateNewsSavedList(List<NewsSaved> news) {
     newsSavedList = news;
+  }
+
+  @action
+  void updateNewsFavoritedList(List<NewsFavorited> news) {
+    newsFavoritedList = news;
   }
 
   @action
@@ -107,7 +176,18 @@ abstract class _SavesStoreBase with Store {
   }
 
   @action
-  List<NewsSaved>? getNewsList() {
+  Future<void> setAtSavesOrAtFavorites (bool atSaves, bool atFavorites) async {
+    isAtSaves = atSaves;
+    isAtFavorites = atFavorites;
+  }
+
+  @action
+  List<NewsSaved>? getNewsSavedList() {
     return newsSavedList;
+  }
+
+  @action
+  List<NewsFavorited>? getNewsFavoritedList() {
+    return newsFavoritedList;
   }
 }

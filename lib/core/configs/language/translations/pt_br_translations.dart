@@ -5,5 +5,11 @@ final Map<String, String> ptBrTranslations = {
   'profileNavBar': "Perfil",
   'interestsTitleSaves': "Interesses",
   'savesAppBarSaves': "Salvos",
-  'favoritesAppBarSaves': "Favoritos"
+  'favoritesAppBarSaves': "Favoritos",
+  'authorAddNewsSaves': "Autor",
+  'titleAddNewsSaves': "Título",
+  'urlAddNewsSaves': "Url",
+  'urlImageAddNewsSaves': "Url da Imagem",
+  'requiredFieldAddNewsSaves': "Campo obrigatório",
+  'urlValidAddNewsSaves': "Insira Url válida",
 };

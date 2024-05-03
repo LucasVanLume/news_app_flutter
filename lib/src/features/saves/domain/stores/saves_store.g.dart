@@ -57,6 +57,38 @@ mixin _$SavesStore on _SavesStoreBase, Store {
     });
   }
 
+  late final _$newsSavedAtom =
+      Atom(name: '_SavesStoreBase.newsSaved', context: context);
+
+  @override
+  NewsSaved? get newsSaved {
+    _$newsSavedAtom.reportRead();
+    return super.newsSaved;
+  }
+
+  @override
+  set newsSaved(NewsSaved? value) {
+    _$newsSavedAtom.reportWrite(value, super.newsSaved, () {
+      super.newsSaved = value;
+    });
+  }
+
+  late final _$newsFavoritedAtom =
+      Atom(name: '_SavesStoreBase.newsFavorited', context: context);
+
+  @override
+  NewsFavorited? get newsFavorited {
+    _$newsFavoritedAtom.reportRead();
+    return super.newsFavorited;
+  }
+
+  @override
+  set newsFavorited(NewsFavorited? value) {
+    _$newsFavoritedAtom.reportWrite(value, super.newsFavorited, () {
+      super.newsFavorited = value;
+    });
+  }
+
   late final _$isLoadingAtom =
       Atom(name: '_SavesStoreBase.isLoading', context: context);
 
@@ -70,6 +102,38 @@ mixin _$SavesStore on _SavesStoreBase, Store {
   set isLoading(bool value) {
     _$isLoadingAtom.reportWrite(value, super.isLoading, () {
       super.isLoading = value;
+    });
+  }
+
+  late final _$isAtSavesAtom =
+      Atom(name: '_SavesStoreBase.isAtSaves', context: context);
+
+  @override
+  bool get isAtSaves {
+    _$isAtSavesAtom.reportRead();
+    return super.isAtSaves;
+  }
+
+  @override
+  set isAtSaves(bool value) {
+    _$isAtSavesAtom.reportWrite(value, super.isAtSaves, () {
+      super.isAtSaves = value;
+    });
+  }
+
+  late final _$isAtFavoritesAtom =
+      Atom(name: '_SavesStoreBase.isAtFavorites', context: context);
+
+  @override
+  bool get isAtFavorites {
+    _$isAtFavoritesAtom.reportRead();
+    return super.isAtFavorites;
+  }
+
+  @override
+  set isAtFavorites(bool value) {
+    _$isAtFavoritesAtom.reportWrite(value, super.isAtFavorites, () {
+      super.isAtFavorites = value;
     });
   }
 
@@ -98,6 +162,23 @@ mixin _$SavesStore on _SavesStoreBase, Store {
     return _$deleteSavesAsyncAction.run(() => super.deleteSaves(newsDelete));
   }
 
+  late final _$saveNewsAsyncAction =
+      AsyncAction('_SavesStoreBase.saveNews', context: context);
+
+  @override
+  Future<void> saveNews(NewsSaved newsSaving) {
+    return _$saveNewsAsyncAction.run(() => super.saveNews(newsSaving));
+  }
+
+  late final _$favoriteNewsAsyncAction =
+      AsyncAction('_SavesStoreBase.favoriteNews', context: context);
+
+  @override
+  Future<void> favoriteNews(NewsFavorited newsFavoriting) {
+    return _$favoriteNewsAsyncAction
+        .run(() => super.favoriteNews(newsFavoriting));
+  }
+
   late final _$setIsLoadingAsyncAction =
       AsyncAction('_SavesStoreBase.setIsLoading', context: context);
 
@@ -106,15 +187,35 @@ mixin _$SavesStore on _SavesStoreBase, Store {
     return _$setIsLoadingAsyncAction.run(() => super.setIsLoading(boolean));
   }
 
+  late final _$setAtSavesOrAtFavoritesAsyncAction =
+      AsyncAction('_SavesStoreBase.setAtSavesOrAtFavorites', context: context);
+
+  @override
+  Future<void> setAtSavesOrAtFavorites(bool atSaves, bool atFavorites) {
+    return _$setAtSavesOrAtFavoritesAsyncAction
+        .run(() => super.setAtSavesOrAtFavorites(atSaves, atFavorites));
+  }
+
   late final _$_SavesStoreBaseActionController =
       ActionController(name: '_SavesStoreBase', context: context);
 
   @override
-  void updateNewsList(List<NewsSaved> news) {
+  void updateNewsSavedList(List<NewsSaved> news) {
     final _$actionInfo = _$_SavesStoreBaseActionController.startAction(
-        name: '_SavesStoreBase.updateNewsList');
+        name: '_SavesStoreBase.updateNewsSavedList');
     try {
-      return super.updateNewsList(news);
+      return super.updateNewsSavedList(news);
+    } finally {
+      _$_SavesStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void updateNewsFavoritedList(List<NewsFavorited> news) {
+    final _$actionInfo = _$_SavesStoreBaseActionController.startAction(
+        name: '_SavesStoreBase.updateNewsFavoritedList');
+    try {
+      return super.updateNewsFavoritedList(news);
     } finally {
       _$_SavesStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -132,11 +233,22 @@ mixin _$SavesStore on _SavesStoreBase, Store {
   }
 
   @override
-  List<NewsSaved>? getNewsList() {
+  List<NewsSaved>? getNewsSavedList() {
     final _$actionInfo = _$_SavesStoreBaseActionController.startAction(
-        name: '_SavesStoreBase.getNewsList');
+        name: '_SavesStoreBase.getNewsSavedList');
     try {
-      return super.getNewsList();
+      return super.getNewsSavedList();
+    } finally {
+      _$_SavesStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  List<NewsFavorited>? getNewsFavoritedList() {
+    final _$actionInfo = _$_SavesStoreBaseActionController.startAction(
+        name: '_SavesStoreBase.getNewsFavoritedList');
+    try {
+      return super.getNewsFavoritedList();
     } finally {
       _$_SavesStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -148,7 +260,11 @@ mixin _$SavesStore on _SavesStoreBase, Store {
 state: ${state},
 newsSavedList: ${newsSavedList},
 newsFavoritedList: ${newsFavoritedList},
-isLoading: ${isLoading}
+newsSaved: ${newsSaved},
+newsFavorited: ${newsFavorited},
+isLoading: ${isLoading},
+isAtSaves: ${isAtSaves},
+isAtFavorites: ${isAtFavorites}
     ''';
   }
 }

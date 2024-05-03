@@ -10,12 +10,14 @@ part of 'db.dart';
 class $FloorAppDatabase {
   /// Creates a database builder for a persistent database.
   /// Once a database is built, you should keep a reference to it and re-use it.
+  // ignore: library_private_types_in_public_api
   static _$AppDatabaseBuilder databaseBuilder(String name) =>
       _$AppDatabaseBuilder(name);
 
   /// Creates a database builder for an in memory database.
   /// Information stored in an in memory database disappears when the process is killed.
   /// Once a database is built, you should keep a reference to it and re-use it.
+  // ignore: library_private_types_in_public_api
   static _$AppDatabaseBuilder inMemoryDatabaseBuilder() =>
       _$AppDatabaseBuilder(null);
 }
@@ -159,6 +161,24 @@ class _$NewsGetDeltDao extends NewsGetDeltDao {
     this.database,
     this.changeListener,
   )   : _queryAdapter = QueryAdapter(database),
+        _newsSaveModelCoreInsertionAdapter = InsertionAdapter(
+            database,
+            'newsTable',
+            (NewsSaveModelCore item) => <String, Object?>{
+                  'author': item.author,
+                  'title': item.title,
+                  'url': item.url,
+                  'urlToImage': item.urlToImage
+                }),
+        _newsFavoriteModelCoreInsertionAdapter = InsertionAdapter(
+            database,
+            'newsFavoriteTable',
+            (NewsFavoriteModelCore item) => <String, Object?>{
+                  'author': item.author,
+                  'title': item.title,
+                  'url': item.url,
+                  'urlToImage': item.urlToImage
+                }),
         _newsSaveModelCoreDeletionAdapter = DeletionAdapter(
             database,
             'newsTable',
@@ -186,6 +206,11 @@ class _$NewsGetDeltDao extends NewsGetDeltDao {
 
   final QueryAdapter _queryAdapter;
 
+  final InsertionAdapter<NewsSaveModelCore> _newsSaveModelCoreInsertionAdapter;
+
+  final InsertionAdapter<NewsFavoriteModelCore>
+      _newsFavoriteModelCoreInsertionAdapter;
+
   final DeletionAdapter<NewsSaveModelCore> _newsSaveModelCoreDeletionAdapter;
 
   final DeletionAdapter<NewsFavoriteModelCore>
@@ -209,6 +234,18 @@ class _$NewsGetDeltDao extends NewsGetDeltDao {
             title: row['title'] as String?,
             url: row['url'] as String?,
             urlToImage: row['urlToImage'] as String?));
+  }
+
+  @override
+  Future<void> insertNewsSave(NewsSaveModelCore newsSave) async {
+    await _newsSaveModelCoreInsertionAdapter.insert(
+        newsSave, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> insertNewsFavorite(NewsFavoriteModelCore newsFavorite) async {
+    await _newsFavoriteModelCoreInsertionAdapter.insert(
+        newsFavorite, OnConflictStrategy.replace);
   }
 
   @override

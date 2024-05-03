@@ -17,7 +17,18 @@ class _AppWidgetState extends State<AppWidget> {
     return MaterialApp.router(
       title: 'My cleanArch app',
       theme: ThemeData(
-        primaryColor: AppTheme.appColor
+        primaryColor: AppTheme.appColor,
+        inputDecorationTheme: const InputDecorationTheme(
+          labelStyle: TextStyle(color: AppTheme.title),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: AppTheme.appColor)
+          )
+        ),
+        textSelectionTheme: const TextSelectionThemeData(
+          selectionColor: AppTheme.selectionColor,
+          cursorColor: AppTheme.appColor,
+          selectionHandleColor: AppTheme.appColor,
+        )
       ),
 
       debugShowCheckedModeBanner: false,

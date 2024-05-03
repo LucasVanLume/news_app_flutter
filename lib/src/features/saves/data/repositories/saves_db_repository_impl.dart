@@ -15,6 +15,16 @@ class SavesDbRepositoryImpl implements SavesDbRepository {
 
   //Saved
   @override
+  Future<void> saveNews(NewsSaved newsSave) async {
+    try {
+      NewsSaveModelCore newsSaveModelcore = NewsSavedModel.toNewsSavedModelCore(newsSave);
+      await appDatabase.db.newsGetDeltDao.insertNewsSave(newsSaveModelcore);
+    } on Failure catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  @override
   Future<void> deleteNewsSaved(NewsSaved news) async {
     try {
       //NewsSavedModel newsSavedModel = NewsSavedModel.fromNewsSaved(news);
@@ -38,7 +48,19 @@ class SavesDbRepositoryImpl implements SavesDbRepository {
     }
   }
 
+  ///////////////////////////////////   //   ///////////////////////////////////
+
   //Favorited
+  @override
+  Future<void> favoriteNews(NewsFavorited newsFavorite) async {
+    try {
+      NewsFavoriteModelCore newsFavoriteModelcore = NewsFavoritedModel.toNewsFavoritedModelCore(newsFavorite);
+      await appDatabase.db.newsGetDeltDao.insertNewsFavorite(newsFavoriteModelcore);
+    } on Failure catch (e) {
+      throw Exception(e);
+    }
+  }
+
   @override
   Future<void> deleteNewsFavorited(NewsFavorited newsFavorited) {
     try {

@@ -15,6 +15,14 @@ class SavesNewsFavoriteList extends StatefulWidget {
 
 class _SavesNewsFavoriteListState extends State<SavesNewsFavoriteList> {
   final savesStore = Modular.get<SavesStore>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    savesStore.setAtSavesOrAtFavorites(false, true);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(

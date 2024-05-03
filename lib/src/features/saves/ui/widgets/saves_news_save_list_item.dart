@@ -87,6 +87,7 @@ class SavesNewsSaveListItem extends StatelessWidget {
             ),
           ),
           Container(
+            width: size.width,
             padding: const EdgeInsets.all(10),
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(bottomRight: Radius.circular(20), bottomLeft: Radius.circular(20)),

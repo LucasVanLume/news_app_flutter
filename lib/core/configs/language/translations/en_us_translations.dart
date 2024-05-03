@@ -5,5 +5,11 @@ final Map<String, String> enUsTranslations = {
   'profileNavBar': "Profile",
   'interestsTitleSaves': "Interests",
   'savesAppBarSaves': "Saves",
-  'favoritesAppBarSaves': "Favorites"
+  'favoritesAppBarSaves': "Favorites",
+  'authorAddNewsSaves': "Author",
+  'titleAddNewsSaves': "Title",
+  'urlAddNewsSaves': "Url",
+  'urlImageAddNewsSaves': "Url image",
+  'requiredFieldAddNewsSaves': "Required field",
+  'urlValidAddNewsSaves': "Enter valid Url",
 };

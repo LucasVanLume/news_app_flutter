@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_clean_architecture/src/features/saves/ui/widgets/saves_add_news_form.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_clean_architecture/src/app_theme.dart';
 import 'package:flutter_clean_architecture/core/configs/language/app_settings_language.dart';
@@ -23,6 +24,19 @@ class _SavesNewsMainState extends State<SavesNewsMain> {
   @override
   Widget build(BuildContext context) {
     final translations = appSettings.readTexts(context);
+
+    void openAddNews(BuildContext context, var val) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            child: val,
+          );
+        }
+      );
+    }
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -59,7 +73,20 @@ class _SavesNewsMainState extends State<SavesNewsMain> {
             SavesNewsFavoriteList(listNewsFavorite: widget.listNewsFavorite)
           ],
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            openAddNews(context, const SavesAddNewsForm());
+          },
+          backgroundColor: AppTheme.appColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+          child: const Icon(
+            Icons.add,
+            color: AppTheme.white,
+            size: 32,
+          ),
+        ),
       ),
     );
   }
+
 }
